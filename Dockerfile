@@ -1,23 +1,38 @@
-FROM alpine
+FROM ubuntu:16.04
 
-RUN apk add --no-cache dos2unix
+RUN apt-get update && \
+    apt-get upgrade -y && \ 	
+    apt-get install -y \
+	git \
+	python3 \
+	python3-dev \
+	python3-setuptools \
+	python3-pip \
+	nginx \
+	supervisor \
+	sqlite3 && \
+	pip3 install -U pip setuptools && \
+   rm -rf /var/lib/apt/lists/*
 
-WORKDIR /tmp
+RUN pip3 install uwsgi
 
-COPY ./docker-entrypoint.sh ./
+RUN echo "daemon off;" >> /etc/nginx/nginx.conf
+COPY nginx-configuration-file /etc/nginx/sites-available/default
+#COPY supervisor-app.conf /etc/supervisor/conf.d/
 
-RUN dos2unix ./docker-entrypoint.sh
+# COPY requirements.txt and RUN pip install BEFORE adding the rest of your code, this will cause Docker's caching mechanism
+# to prevent re-installing (all your) dependencies when you made a change a line or two in your app.
 
-FROM python:3
+RUN mkdir code
+COPY requirements.txt /code/
+RUN pip3 install -r /code/requirements.txt
 
-WORKDIR /usr/src/app
+# add (the rest of) our code
+COPY . /code/
 
-COPY requirements.txt ./
+# install django, normally you would remove this step because your project would already
+# be installed in the code/app/ directory
 
-RUN pip3 install --no-cache-dir -r requirements.txt
+EXPOSE 8009
 
-COPY --from=0 /tmp/docker-entrypoint.sh ./
-RUN chmod +x docker-entrypoint.sh
-COPY seed.json create_superuser.py ./
-
-ENTRYPOINT ./docker-entrypoint.sh
+ENTRYPOINT /code/docker-entrypoint.sh
