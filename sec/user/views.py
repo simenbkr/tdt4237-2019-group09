@@ -24,12 +24,8 @@ class LoginView(FormView):
 
     def form_valid(self, form):
         try:
-            password = make_password(form.cleaned_data["password"])
-
             from django.contrib.auth import authenticate
             user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
-            #user = User.objects.raw("SELECT * FROM auth_user WHERE username='" + form.cleaned_data[
-            #"username"] + "' AND password='" + password + "';")[0]
             login(self.request, user)
             return super().form_valid(form)
         except IndexError:
