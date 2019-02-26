@@ -93,8 +93,9 @@ DATABASES = {
 
 PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.Argon2PasswordHasher'
-    #"user.passwords.CustomMD5PasswordHasher"
 ]
+
+SESSION_COOKIE_AGE = 3600
 
 # Login redirect
 LOGIN_URL = 'login'
