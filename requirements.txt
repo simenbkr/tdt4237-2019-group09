@@ -4,3 +4,4 @@ django-icons==0.1.0
 pytz==2018.4
 channels
 uwsgi
+django[argon2]
