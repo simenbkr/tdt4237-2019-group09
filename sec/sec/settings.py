@@ -96,6 +96,14 @@ PASSWORD_HASHERS = [
 ]
 
 SESSION_COOKIE_AGE = 3600
+SESSION_COOKIE_SECURE = False
+SESSION_COOKIE_HTTPONLY = True
+SESSION_SAVE_EVERY_REQUEST = False
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
+PASSWORD_RESET_TIMEOUT_DAYS = 1
+
+
 
 # Login redirect
 LOGIN_URL = 'login'
@@ -120,6 +128,13 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
+
+
+SERVER_EMAIL = 'gr9@stud.ntnu.no'
+DEFAULT_FROM_EMAIL = 'gr9@stud.ntnu.no'
+EMAIL_SUBJECT_PREFIX = '[Django] '
+EMAIL_HOST = 'smtp.stud.ntnu.no'
+EMAIL_PORT = 25
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
