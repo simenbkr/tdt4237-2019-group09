@@ -16,8 +16,6 @@ class InformationMiddleware:
 
     def __call__(self, request):
         response = self.get_response(request)
-        response[
-            "Server2"] = f"Django/{django.get_version()} Python/{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.serial} {platform.system()}/{platform.release()}"
         return response
 
 
