@@ -122,6 +122,9 @@ class TaskFile(models.Model):
         file_name = parts[len(parts) - 1]
         return file_name
 
+    def get_task(self):
+        return self.task
+
 
 class TaskFileTeam(models.Model):
     file = models.ForeignKey(TaskFile, on_delete=models.CASCADE, related_name="teams")
