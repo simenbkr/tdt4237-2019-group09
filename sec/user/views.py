@@ -1,6 +1,5 @@
 from django.contrib.auth import login
 from django.contrib.auth.hashers import make_password
-from django.contrib.auth.models import User
 from django.contrib.sessions.backends.cache import SessionStore
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
@@ -26,8 +25,11 @@ class LoginView(FormView):
     def form_valid(self, form):
         try:
             password = make_password(form.cleaned_data["password"])
-            user = User.objects.raw("SELECT * FROM auth_user WHERE username='" + form.cleaned_data[
-            "username"] + "' AND password='" + password + "';")[0]
+
+            from django.contrib.auth import authenticate
+            user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
+            #user = User.objects.raw("SELECT * FROM auth_user WHERE username='" + form.cleaned_data[
+            #"username"] + "' AND password='" + password + "';")[0]
             login(self.request, user)
             return super().form_valid(form)
         except IndexError:
