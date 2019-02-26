@@ -338,7 +338,6 @@ def task_view(request, project_id, task_id):
 
 
 @login_required
-@csrf_exempt
 def task_permissions(request, project_id, task_id):
     user = request.user
     task = Task.objects.get(pk=task_id)
