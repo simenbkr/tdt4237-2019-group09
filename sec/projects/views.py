@@ -7,6 +7,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
+from django.http import FileResponse
 
 from user.models import Profile
 from .forms import ProjectForm, TaskFileForm, ProjectStatusForm, TaskOfferForm, TaskOfferResponseForm, \
@@ -388,7 +389,7 @@ def view_file(request, file_id):
         messages.error(request, "You do not have permission to read this file.")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-    return f
+    return FileResponse(open(f, 'rb'))
 
 
 @login_required
