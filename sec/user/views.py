@@ -1,6 +1,6 @@
 from django.contrib.auth import login
 from django.contrib.sessions.backends.cache import SessionStore
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, CreateView, FormView
 from django.core.mail import EmailMessage
@@ -64,11 +64,12 @@ class SignupView(CreateView):
         email_content  = "Hello " + user.username + "!"
         email_content += "\n\nPlease visit\n http://progsexy.flyktig.no:4009/" + user.profile.token + "/" + user.username + "\nto verify your account."
 
-        email = EmailMessage(email_subject, email_content, user.profile.email)
+        email = EmailMessage(email_subject, email_content, from_email='NO REPLY <noreply@gr9progsexy.ntnu.no>',
+                             to=[user.profile.email], reply_to=['noreply@gr9progsexy.ntnu.no'])
         email.send()
 #        login(self.request, user)
 
-        return HttpResponseRedirect("An e-mail has been dispatched to your provided address. Please press the link within"
+        return HttpResponse("An e-mail has been dispatched to your provided address. Please press the link within"
                                     "to verify your e-mail.")
 
         #return HttpResponseRedirect(self.success_url)
