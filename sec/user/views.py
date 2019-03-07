@@ -9,6 +9,9 @@ from os import urandom
 from binascii import hexlify
 from django.contrib.auth.models import User
 from django.views import View
+import logging
+
+logger = logging.getLogger(__name__)
 
 class IndexView(TemplateView):
     template_name = "sec/base.html"
@@ -32,7 +35,9 @@ class LoginView(FormView):
                 login(self.request, user)
                 return super().form_valid(form)
         except IndexError:
-            form.add_error(None, "Provide a valid username and/or password")
+            ip = request.META.get('REMOTE_ADDR')
+            logger.warning('invalid log-in attempt for user: {user} from {ip}')
+            form.add_error(None, "Provide a valid username and/or password")  
             return super().form_invalid(form)
 
 
