@@ -9,7 +9,7 @@ server {
 	}
 
 	location /static/ {
-		root /srv/www-data/group09/sec/static;
+		root /srv/www-data/group09/;
 	}
 
 	location /media/ {
