@@ -37,7 +37,9 @@ class LoginView(FormView):
         except e:
             ip = self.request.META.get('REMOTE_ADDR')
             logger.warning('invalid log-in attempt for user: {} from {}'.format(form.cleaned_data['username'], ip))
-            form.add_error(None, "Provide a valid username and/or password")  
+            form.add_error(None, "Provide a valid username and/or password")
+
+    def form_invalid(self, form):
         return super().form_invalid(form)
 
 
