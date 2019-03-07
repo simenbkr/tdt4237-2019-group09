@@ -28,8 +28,9 @@ class LoginView(FormView):
         try:
             from django.contrib.auth import authenticate
             user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
-            login(self.request, user)
-            return super().form_valid(form)
+            if user is not None:
+                login(self.request, user)
+                return super().form_valid(form)
         except IndexError:
             form.add_error(None, "Provide a valid username and/or password")
             return super().form_invalid(form)
