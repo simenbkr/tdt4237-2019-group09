@@ -160,6 +160,9 @@ class ResetPassword(FormView):
         if kwargs['token'] != profile.token:
             return HttpResponse("wtf dude, not cool")
 
+        else:
+            return HttpResponse("user/template_name")
+
 
     def form_valid(self, form):
         email = self.kwargs['email']
