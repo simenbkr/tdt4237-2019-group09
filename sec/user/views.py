@@ -35,9 +35,12 @@ class LoginView(FormView):
                 login(self.request, user)
                 return super().form_valid(form)
         except e:
-            ip = self.request.META.get('REMOTE_ADDR')
-            logger.warning('invalid log-in attempt for user: {} from {}'.format(form.cleaned_data['username'], ip))
-            form.add_error(None, "Provide a valid username and/or password")
+            pass
+
+        ip = self.request.META.get('REMOTE_ADDR')
+        logger.warning('invalid log-in attempt for user: {} from {}'.format(form.cleaned_data['username'], ip))
+        form.add_error(None, "Provide a valid username and/or password")
+        return super().form_invalid(form)
 
     def form_invalid(self, form):
         return super().form_invalid(form)
@@ -50,7 +53,7 @@ class SignupView(CreateView):
     success_url = reverse_lazy("home")
 
     def form_valid(self, form):
-        user = form.save(commit=False)
+        user = form.save()
         user.profile.company = form.cleaned_data.get("company")
         user.profile.categories.add(*form.cleaned_data["categories"])
         user.is_active = False
@@ -58,8 +61,8 @@ class SignupView(CreateView):
         user.save()
 
         email_subject  = "[TDT4237] [GR9] Activate your user account."
-        email_content  = "Hello " + user + "!"
-        email_content += "\n\nPlease visit\n http://progsexy.flyktig.no:4009/" + user.profile.token + "/" + user + "\nto verify your account."
+        email_content  = "Hello " + user.username + "!"
+        email_content += "\n\nPlease visit\n http://progsexy.flyktig.no:4009/" + user.profile.token + "/" + user.username + "\nto verify your account."
 
         email = EmailMessage(email_subject, email_content, user.profile.email)
         email.send()
