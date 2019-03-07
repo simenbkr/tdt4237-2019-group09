@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, CreateView, FormView
 from django.core.mail import EmailMessage
-from .forms import SignUpForm, LoginForm, ForgotForm, EmailForm
+from .forms import SignUpForm, LoginForm, ForgotForm, EmailForm, ResetForm
 from os import urandom
 from binascii import hexlify
 from django.contrib.auth.models import User
@@ -12,6 +12,7 @@ from django.views import View
 from django.template.loader import render_to_string
 from django.contrib.sites.models import Site
 from django.shortcuts import render, redirect
+from django.contrib import messages
 import logging
 from .models import Profile, SecurityQuestion, SecurityQuestionUser
 
@@ -35,7 +36,7 @@ class LoginView(FormView):
         try:
             from django.contrib.auth import authenticate
             user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
-            if user is not None:
+            if user is not None and not user.profile.tmp_login:
                 login(self.request, user)
                 return super().form_valid(form)
         except e:
@@ -87,7 +88,6 @@ class VerifyUser(View):
 
     def get(self, request, token, username):
         user = User.objects.get(username=username)
-        from django.contrib import messages
 
         if user is not None and token == user.profile.token and len(user.profile.token) > 10:
             user.is_active = True
@@ -128,16 +128,50 @@ class ForgotPassword(FormView):
         sec_q = SecurityQuestionUser.objects.get(user=profile.user)
 
         if sec_q.security_question == form.cleaned_data.get('security_questions') and sec_q.answer == form.cleaned_data['answer']:
-            tmp_pw = User.objects.make_random_password()
-            logger.warning("USER: {}      TMP PW: {}".format(user.username, tmp_pw))
+            #tmp_pw = User.objects.make_random_password()
+            tmp_pw = hexlify(urandom(32)).decode("utf-8")
+
             profile.tmp_login = True
+            profile.token = hexlify(urandom(32)).decode("utf-8")
             profile.save()
+
             user.set_password(tmp_pw)
             user.save()
 
+            email_subject = "[TDT4237] [GR9] Password reset in progress."
+            link = "http://{}/user/forgot/{}/{}".format(Site.objects.get_current().domain, profile.email, profile.token)
+            email_content = "Link: {}\nPassword: {}".format(link, tmp_pw)
+            email = EmailMessage(email_subject, email_content, from_email='NO REPLY <noreply@gr9progsexy.ntnu.no>',
+                             to=[profile.email], reply_to=['noreply@gr9progsexy.ntnu.no'])
 
-            return HttpResponse("Your temporary password: {}".format(tmp_pw))
+            email.send()
+
+            return HttpResponse("Your temporary password, with a link to login has been sent to your email")
 
         return HttpResponse("Fuck off")
 
 
+class ResetPassword(FormView):
+    form_class = ResetForm
+    template_name = "user/reset.html"
+
+    def form_valid(self, form):
+        email = self.kwargs['email']
+        token = self.kwargs['token']
+
+        profile = Profile.objects.get(email=email)
+        user = profile.user
+
+        if token == profile.token and user.check_password(form.cleaned_data.get('temporary_pw')) and \
+                form.cleaned_data.get('new_password1') == form.cleaned_data.get('new_password2'):
+
+            user.set_password(form.cleaned_data.get('new_password1'))
+            user.save()
+
+            profile.tmp_login = False
+            profile.save()
+
+            messages.success("Password changed successfully.")
+            return HttpResponseRedirect(reverse_lazy('home'))
+
+        return HttpResponse("Du suger as")

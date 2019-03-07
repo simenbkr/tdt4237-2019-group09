@@ -43,3 +43,9 @@ class ForgotForm(forms.Form):
 
 class EmailForm(forms.Form):
     email = forms.EmailField(max_length=254)
+
+
+class ResetForm(forms.Form):
+    temporary_pw = forms.CharField(required=True, widget=forms.TextInput(attrs={"type": "password"}))
+    new_password1 = forms.CharField(required=True, widget=forms.TextInput(attrs={"type": "password"}))
+    new_password2 = forms.CharField(required=True, widget=forms.TextInput(attrs={"type": "password"}))
