@@ -29,7 +29,7 @@
     {% if user_permissions.read %}
         {% for file in task.files.all %}
             <div>
-                <a target="_blank" href="{{ file.file.url }}">
+                <a target="_blank" href="{% url 'view_file' file_id=file.id %}">
                     {{ file.name }}
                 </a>
             {% if user_permissions.modify %}
