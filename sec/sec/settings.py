@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'bootstrap4',
     'django_icons',
     'payment.apps.PaymentConfig',
+    'django.contrib.sites'
 #    'axes'
 ]
 
@@ -154,7 +155,7 @@ EMAIL_HOST = 'smtp.stud.ntnu.no'
 #EMAIL_PORT = 25
 EMAIL_PORT = 6969
 
-
+SITE_ID = 1
 
 
 try:
