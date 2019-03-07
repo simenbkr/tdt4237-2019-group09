@@ -129,6 +129,7 @@ class ForgotPassword(FormView):
 
         if sec_q.security_question == form.cleaned_data.get('security_questions') and sec_q.answer == form.cleaned_data['answer']:
             tmp_pw = User.objects.make_random_password()
+            logger.warning("TMP PW: {}".format(tmp_pw))
             profile.tmp_login = True
             profile.save()
             user.set_password(tmp_pw)
