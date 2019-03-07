@@ -145,6 +145,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 SERVER_EMAIL = 'gr9@stud.ntnu.no'
 DEFAULT_FROM_EMAIL = 'gr9@stud.ntnu.no'
@@ -153,7 +154,7 @@ EMAIL_HOST = 'smtp.stud.ntnu.no'
 EMAIL_PORT = 25
 
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 
 try:
     from .local_settings import *
