@@ -65,7 +65,7 @@ class SignupView(CreateView):
         user.profile.token = hexlify(urandom(32)).decode("utf-8")
         user.save()
 
-        sec_question = SecurityQuestion.objects.get(pk=form.cleaned_data.get('security_questions'))
+        sec_question = form.cleaned_data.get('security_questions')
         sec_q_user = SecurityQuestionUser.objects.create(user=user, security_question=sec_question,
                                                          answer=form.cleaned_data.get('answer'))
         sec_q_user.save()
