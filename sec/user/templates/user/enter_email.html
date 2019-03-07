@@ -4,10 +4,10 @@
 {% block title %}Forgot password{% endblock %}
 
 {% block content %}
-    <h2>Login</h2>
+    <h2>Forgot password</h2>
     <form method="post">
         {% csrf_token %}
         {% bootstrap_form form %}
-        <button type="submit">Login</button>
+        <button type="submit">Send</button>
     </form>
 {% endblock %}

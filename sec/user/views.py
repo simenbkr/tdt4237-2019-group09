@@ -109,7 +109,7 @@ class ForgotPassordEmail(FormView):
     def form_valid(self, form):
         profile = Profile.objects.get(email=form.cleaned_data.get("email"))
         if profile is not None:
-            return redirect('')
+            return redirect('user/forgot/{}'.format(profile.email))
 
         return HttpResponse("No user with that email. Sorry bruh.")
 
