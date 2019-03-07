@@ -8,5 +8,5 @@ urlpatterns = [
     path('logout/', views.logout, name='logout'),
     path('signup/', views.SignupView.as_view(), name='signup'),
     path(r'^verify/(?P<token>[0-9a-f]+)/(?P<username>[\w.@+-]+)/$', views.VerifyUser.as_view(), name='verify'),
-    path('forgot/, ')
+    #path('forgot/, ')
 ]
