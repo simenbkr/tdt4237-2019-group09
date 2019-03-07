@@ -120,7 +120,7 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
 PASSWORD_RESET_TIMEOUT_DAYS = 1
 
-
+SECURE_CONTENT_TYPE_NOSNIFF = True
 
 # Login redirect
 LOGIN_URL = 'login'
