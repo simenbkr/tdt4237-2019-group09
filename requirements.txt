@@ -5,3 +5,4 @@ pytz==2018.4
 channels
 uwsgi
 django[argon2]
+django-axes

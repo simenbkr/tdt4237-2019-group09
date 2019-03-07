@@ -1,12 +1,13 @@
 from django.contrib.auth import login
-from django.contrib.auth.hashers import make_password
 from django.contrib.sessions.backends.cache import SessionStore
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, CreateView, FormView
-
+from django.core.mail import EmailMessage
 from .forms import SignUpForm, LoginForm
-
+from os import urandom
+from binascii import hexlify
+from django.contrib.auth.models import User
 
 class IndexView(TemplateView):
     template_name = "sec/base.html"
@@ -39,10 +40,36 @@ class SignupView(CreateView):
     success_url = reverse_lazy("home")
 
     def form_valid(self, form):
-        user = form.save()
+        user = form.save(commit=False)
         user.profile.company = form.cleaned_data.get("company")
         user.profile.categories.add(*form.cleaned_data["categories"])
+        user.is_active = False
+        user.profile.token = hexlify(urandom(32)).decode("utf-8")
         user.save()
-        login(self.request, user)
 
-        return HttpResponseRedirect(self.success_url)
+        email_subject  = "[TDT4237] [GR9] Activate your user account."
+        email_content  = "Hello " + user + "!"
+        email_content += "\n\nPlease visit\n http://progsexy.flyktig.no:4009/" + user.profile.token + "/" + user + "\nto verify your account."
+
+        email = EmailMessage(email_subject, email_content, user.profile.email)
+        email.send()
+#        login(self.request, user)
+
+        return HttpResponseRedirect("An e-mail has been dispatched to your provided address. Please press the link within"
+                                    "to verify your e-mail.")
+
+        #return HttpResponseRedirect(self.success_url)
+
+
+class VerifyUser(View):
+
+    def get(self, request, token, username):
+        user = User.objects.get(username=username)
+
+        if user is not None and token == user.profile.token:
+            user.is_active = True
+            user.save()
+
+            return HttpResponseRedirect("Woohoo! Yo")
+
+        return HttpResponseRedirect("Fuck off my dude")
