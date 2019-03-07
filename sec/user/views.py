@@ -98,7 +98,7 @@ class VerifyUser(View):
             messages.warning(request, "Your email was successfully verified. Please login.")
             return HttpResponseRedirect(reverse_lazy("home"))
 
-        messages.warning("Your e-mail could not be verified. Please try again.")
+        messages.warning(request, "Your e-mail could not be verified. Please try again.")
         return HttpResponseRedirect(reverse_lazy("home"))
 
 
