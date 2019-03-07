@@ -381,7 +381,9 @@ def view_file(request, file_id):
     f = TaskFile.objects.get(pk=file_id)
     task = f.get_task()
 
-    if request.user not in task.write.all() and request.user not in task.modify.all():
+    user_permissions = get_user_task_permissions(request.user, task)
+
+    if not user_permissions['read']:
         from django.contrib import messages
         messages.error(request, "You do not have permission to read this file.")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -394,7 +396,9 @@ def delete_file(request, file_id):
     f = TaskFile.objects.get(pk=file_id)
     task = f.get_task()
 
-    if request.user not in task.write.all() and request.user not in task.modify.all():
+    user_permissions = get_user_task_permissions(request.user, task)
+
+    if not user_permissions['modify'] and not user_permissions['write']:
         from django.contrib import messages
         messages.error(request, "You do not have permission to delete this file.")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
