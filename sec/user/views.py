@@ -11,6 +11,7 @@ from django.contrib.auth.models import User
 from django.views import View
 from django.template.loader import render_to_string
 from django.contrib.sites.models import Site
+from django.shortcuts import render, redirect
 import logging
 
 logger = logging.getLogger(__name__)
@@ -72,7 +73,7 @@ class SignupView(CreateView):
                              to=[user.profile.email], reply_to=['noreply@gr9progsexy.ntnu.no'])
 
         email.send()
-        return HttpResponseRedirect(self.success_url)
+        return render(self.request, self.success_url)
 
 
 class VerifyUser(View):
