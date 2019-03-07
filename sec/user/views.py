@@ -31,8 +31,9 @@ class LoginView(FormView):
         try:
             from django.contrib.auth import authenticate
             user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
-            login(self.request, user)
-            return super().form_valid(form)
+            if user is not None:
+                login(self.request, user)
+                return super().form_valid(form)
         except IndexError:
             ip = request.META.get('REMOTE_ADDR')
             logger.warning('invalid log-in attempt for user: {} from {}'.format(user, ip))
