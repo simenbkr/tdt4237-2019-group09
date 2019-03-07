@@ -56,6 +56,7 @@ class SignupView(CreateView):
         user = form.save()
         user.profile.company = form.cleaned_data.get("company")
         user.profile.categories.add(*form.cleaned_data["categories"])
+        user.profile.email = form.cleaned_data.get("email")
         user.is_active = False
         user.profile.token = hexlify(urandom(32)).decode("utf-8")
         user.save()
@@ -66,6 +67,10 @@ class SignupView(CreateView):
 
         email = EmailMessage(email_subject, email_content, from_email='NO REPLY <noreply@gr9progsexy.ntnu.no>',
                              to=[user.profile.email], reply_to=['noreply@gr9progsexy.ntnu.no'])
+
+        #mail = EmailMessage('du er en kake', 'gå ut gå ut gå ut', from_email='NO REPLY <noreply@yomama.com>', to=['simenbkr@stud.ntnu.no'], reply_to=['yomamasolutions@kaka.com'])
+
+
         email.send()
 #        login(self.request, user)
 
@@ -84,6 +89,11 @@ class VerifyUser(View):
             user.is_active = True
             user.save()
 
-            return HttpResponseRedirect("Woohoo! Yo")
+            return HttpResponse("Woohoo! Yo")
 
-        return HttpResponseRedirect("Fuck off my dude")
+        return HttpResponse("Fuck off my dude")
+
+
+class ForgotPassword(View):
+
+    pass
