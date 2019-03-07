@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, re_path
 
 from . import views
 
@@ -7,6 +7,6 @@ urlpatterns = [
     path('login/', views.LoginView.as_view(), name='login'),
     path('logout/', views.logout, name='logout'),
     path('signup/', views.SignupView.as_view(), name='signup'),
-    path(r'^verify/(?P<token>[0-9a-f]+)/(?P<username>[\w.@+-]+)/$', views.VerifyUser.as_view(), name='verify'),
+    re_path(r'^verify/(?P<token>[0-9a-f]+)/(?P<username>[\w.@+-]+)/?$', views.VerifyUser.as_view(), name='verify'),
     #path('forgot/, ')
 ]

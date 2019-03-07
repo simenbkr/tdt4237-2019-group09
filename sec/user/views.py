@@ -9,6 +9,8 @@ from os import urandom
 from binascii import hexlify
 from django.contrib.auth.models import User
 from django.views import View
+from django.template.loader import render_to_string
+from django.contrib.sites.models import Site
 import logging
 
 logger = logging.getLogger(__name__)
@@ -50,7 +52,7 @@ class LoginView(FormView):
 class SignupView(CreateView):
     form_class = SignUpForm
     template_name = "user/signup.html"
-    success_url = reverse_lazy("home")
+    success_url = "user/email_sent.html"
 
     def form_valid(self, form):
         user = form.save()
@@ -62,36 +64,33 @@ class SignupView(CreateView):
         user.save()
 
         email_subject  = "[TDT4237] [GR9] Activate your user account."
-        email_content  = "Hello " + user.username + "!"
-        email_content += "\n\nPlease visit\n http://progsexy.flyktig.no:4009/" + user.profile.token + "/" + user.username + "\nto verify your account."
+        current_site = Site.objects.get_current()
+
+        email_content = render_to_string('user/email_template.html', {'user': user, 'domain': current_site.domain, 'token': user.profile.token})
 
         email = EmailMessage(email_subject, email_content, from_email='NO REPLY <noreply@gr9progsexy.ntnu.no>',
                              to=[user.profile.email], reply_to=['noreply@gr9progsexy.ntnu.no'])
 
-        #mail = EmailMessage('du er en kake', 'gå ut gå ut gå ut', from_email='NO REPLY <noreply@yomama.com>', to=['simenbkr@stud.ntnu.no'], reply_to=['yomamasolutions@kaka.com'])
-
-
         email.send()
-#        login(self.request, user)
-
-        return HttpResponse("An e-mail has been dispatched to your provided address. Please press the link within"
-                                    "to verify your e-mail.")
-
-        #return HttpResponseRedirect(self.success_url)
+        return HttpResponseRedirect(self.success_url)
 
 
 class VerifyUser(View):
 
     def get(self, request, token, username):
         user = User.objects.get(username=username)
+        from django.contrib import messages
 
         if user is not None and token == user.profile.token:
             user.is_active = True
             user.save()
 
-            return HttpResponse("Woohoo! Yo")
 
-        return HttpResponse("Fuck off my dude")
+            messages.warning(request, "Your email was successfully verified. Please login.")
+            return HttpResponseRedirect(reverse_lazy("home"))
+
+        messages.warning("Your e-mail could not be verified. Please try again.")
+        return HttpResponseRedirect(reverse_lazy("home"))
 
 
 class ForgotPassword(View):
