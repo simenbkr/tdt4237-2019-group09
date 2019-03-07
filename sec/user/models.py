@@ -50,5 +50,5 @@ class SecurityQuestion(models.Model):
 
 class SecurityQuestionUser(models):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    security_question = models.ForeignKey(SecurityQuestion)
+    security_question = models.ForeignKey(SecurityQuestion, on_delete=models.CASCADE)
     answer = models.CharField(max_length=200, null=False)
