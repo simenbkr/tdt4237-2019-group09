@@ -155,6 +155,12 @@ class ResetPassword(FormView):
     form_class = ResetForm
     template_name = "user/reset.html"
 
+    def get(self, request, *args, **kwargs):
+        profile = Profile.objects.get(email=kwargs['email'])
+        if kwargs['token'] != profile.token:
+            return HttpResponse("wtf dude, not cool")
+
+
     def form_valid(self, form):
         email = self.kwargs['email']
         token = self.kwargs['token']
