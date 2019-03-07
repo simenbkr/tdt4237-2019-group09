@@ -171,7 +171,7 @@ class ResetPassword(FormView):
             profile.tmp_login = False
             profile.save()
 
-            messages.success("Password changed successfully.")
+            messages.success(self.request, "Password changed successfully.")
             return HttpResponseRedirect(reverse_lazy('home'))
 
         return HttpResponse("Du suger as")
