@@ -45,6 +45,11 @@ INSTALLED_APPS = [
     'bootstrap4',
     'django_icons',
     'payment.apps.PaymentConfig',
+    'axes'
+]
+
+AUTHENTICATION_BACKENDS = [
+    'axes.backends.AxesModelBackend'
 ]
 
 MIDDLEWARE = [
@@ -107,7 +112,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 SESSION_COOKIE_AGE = 3600
-SESSION_COOKIE_SECURE = False
+SESSION_COOKIE_SECURE = False #Set to True when TLS/HTTPS is deployed.
 SESSION_COOKIE_HTTPONLY = True
 SESSION_SAVE_EVERY_REQUEST = False
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
