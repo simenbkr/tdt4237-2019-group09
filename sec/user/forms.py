@@ -26,7 +26,7 @@ class SignUpForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('username', 'first_name', 'last_name', 'categories', 'company', 'email', 'password1', 'password2',
-                  'security_question', 'answer', 'phone_number', 'street_address', 'city', 'state', 'postal_code',
+                  'security_questions', 'answer', 'phone_number', 'street_address', 'city', 'state', 'postal_code',
                   'country')
 
 
