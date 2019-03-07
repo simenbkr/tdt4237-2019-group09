@@ -34,11 +34,12 @@ class LoginView(FormView):
             if user is not None:
                 login(self.request, user)
                 return super().form_valid(form)
-        except IndexError:
-            ip = request.META.get('REMOTE_ADDR')
-            logger.warning('invalid log-in attempt for user: {} from {}'.format(user, ip))
+        except e:
+            ip = self.request.META.get('REMOTE_ADDR')
+            logger.warning('invalid log-in attempt for user: {} from {}'.format(form.cleaned_data['username'], ip))
             form.add_error(None, "Provide a valid username and/or password")  
-            return super().form_invalid(form)
+        return super().form_invalid(form)
+
 
 
 class SignupView(CreateView):
