@@ -11,8 +11,4 @@ server {
 	location /static/ {
 		root /srv/www-data/group09/;
 	}
-
-	location /media/ {
-		root /srv/www-data/group09/;
-	}
 }

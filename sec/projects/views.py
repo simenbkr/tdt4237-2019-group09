@@ -383,7 +383,7 @@ def view_file(request, file_id):
 
     if request.user not in task.write.all() and request.user not in task.modify.all():
         from django.contrib import messages
-        messages.error("Failed to read the file.")
+        messages.error(request, "Failed to read the file.")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
     return f
@@ -396,12 +396,12 @@ def delete_file(request, file_id):
 
     if request.user not in task.write.all() and request.user not in task.modify.all():
         from django.contrib import messages
-        messages.error("Failed to delete the file.")
+        messages.error(request, "Failed to delete the file.")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
     if task.status in ['dd', 'ps', 'pp']:
         from django.contrib import messages
-        messages.error("Failed to delete the file.")
+        messages.error(request, "Failed to delete the file.")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
     f.delete()
