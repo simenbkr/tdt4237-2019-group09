@@ -65,6 +65,11 @@ class SignupView(CreateView):
         user.profile.token = hexlify(urandom(32)).decode("utf-8")
         user.save()
 
+        sec_question = SecurityQuestion.objects.get(pk=form.cleaned_data.get('security_questions'))
+        sec_q_user = SecurityQuestionUser.objects.create(user=user, security_question=sec_question,
+                                                         answer=form.cleaned_data.get('answer'))
+        sec_q_user.save()
+
         email_subject  = "[TDT4237] [GR9] Activate your user account."
         current_site = Site.objects.get_current()
 
@@ -84,10 +89,11 @@ class VerifyUser(View):
         user = User.objects.get(username=username)
         from django.contrib import messages
 
-        if user is not None and token == user.profile.token:
+        if user is not None and token == user.profile.token and len(user.profile.token) > 10:
             user.is_active = True
             user.save()
-
+            user.profile.token = ''
+            user.profile.save()
 
             messages.warning(request, "Your email was successfully verified. Please login.")
             return HttpResponseRedirect(reverse_lazy("home"))
