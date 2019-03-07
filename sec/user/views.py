@@ -161,7 +161,7 @@ class ResetPassword(FormView):
             return HttpResponse("wtf dude, not cool")
 
         else:
-            return HttpResponse("user/template_name")
+            return render(request, "user/reset.html", {'form': ResetForm})
 
 
     def form_valid(self, form):
