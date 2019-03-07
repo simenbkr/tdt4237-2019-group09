@@ -12,7 +12,6 @@ from django.views import View
 from django.template.loader import render_to_string
 from django.contrib.sites.models import Site
 from django.shortcuts import render, redirect
-from axes.decorators import watch_login
 from django.contrib import messages
 import logging
 from .models import Profile, SecurityQuestion, SecurityQuestionUser
@@ -27,7 +26,7 @@ def logout(request):
     request.session = SessionStore()
     return HttpResponseRedirect(reverse_lazy("home"))
 
-@watch_login
+
 class LoginView(FormView):
     form_class = LoginForm
     template_name = "user/login.html"
