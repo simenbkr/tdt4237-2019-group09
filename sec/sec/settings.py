@@ -45,12 +45,12 @@ INSTALLED_APPS = [
     'bootstrap4',
     'django_icons',
     'payment.apps.PaymentConfig',
-    'django.contrib.sites'
-    'axes'
+    'django.contrib.sites',
+    #'axes'
 ]
 
 AUTHENTICATION_BACKENDS = [
-    'axes.backends.AxesModelBackend'
+    #'axes.backends.AxesModelBackend'
 ]
 
 MIDDLEWARE = [
