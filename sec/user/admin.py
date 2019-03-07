@@ -32,6 +32,6 @@ class CustomUserAdmin(UserAdmin):
 
 admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
-admin.site.register(User, SecurityQuestion)
-admin.site.register(User, SecurityQuestionUser)
-admin.site.register(User, Profile)
+admin.site.register(SecurityQuestion)
+admin.site.register(SecurityQuestionUser)
+admin.site.register(Profile)
