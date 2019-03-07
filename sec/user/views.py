@@ -125,7 +125,7 @@ class ForgotPassword(FormView):
         email = self.kwargs['email']
         profile = Profile.objects.get(email=email)
 
-        sec_q = SecurityQuestionUser.objects.get(User=profile.user)
+        sec_q = SecurityQuestionUser.objects.get(user=profile.user)
 
         if sec_q.security_question == form.cleaned_data.get('security_questions') and sec_q.answer == form.cleaned_data['answer']:
             tmp_pw = hexlify(urandom(32)).decode("utf-8")
