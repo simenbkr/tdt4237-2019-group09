@@ -53,7 +53,7 @@ class SignupView(CreateView):
     success_url = reverse_lazy("home")
 
     def form_valid(self, form):
-        user = form.save(commit=False)
+        user = form.save()
         user.profile.company = form.cleaned_data.get("company")
         user.profile.categories.add(*form.cleaned_data["categories"])
         user.is_active = False
