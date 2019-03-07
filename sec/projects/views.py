@@ -389,7 +389,7 @@ def view_file(request, file_id):
         messages.error(request, "You do not have permission to read this file.")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-    return FileResponse(open(f, 'rb'))
+    return FileResponse(open(f.file, 'rb'))
 
 
 @login_required
