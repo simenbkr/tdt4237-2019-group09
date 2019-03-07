@@ -8,6 +8,7 @@ from .forms import SignUpForm, LoginForm
 from os import urandom
 from binascii import hexlify
 from django.contrib.auth.models import User
+from django.views import View
 
 class IndexView(TemplateView):
     template_name = "sec/base.html"
