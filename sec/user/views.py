@@ -61,8 +61,8 @@ class SignupView(CreateView):
         user.save()
 
         email_subject  = "[TDT4237] [GR9] Activate your user account."
-        email_content  = "Hello " + user + "!"
-        email_content += "\n\nPlease visit\n http://progsexy.flyktig.no:4009/" + user.profile.token + "/" + user + "\nto verify your account."
+        email_content  = "Hello " + user.username + "!"
+        email_content += "\n\nPlease visit\n http://progsexy.flyktig.no:4009/" + user.profile.token + "/" + user.username + "\nto verify your account."
 
         email = EmailMessage(email_subject, email_content, user.profile.email)
         email.send()
