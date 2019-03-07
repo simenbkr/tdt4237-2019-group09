@@ -39,6 +39,8 @@ class LoginView(FormView):
             logger.warning('invalid log-in attempt for user: {} from {}'.format(form.cleaned_data['username'], ip))
             form.add_error(None, "Provide a valid username and/or password")
 
+        return super().form_invalid(form)
+
     def form_invalid(self, form):
         return super().form_invalid(form)
 
