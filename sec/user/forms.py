@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from projects.models import ProjectCategory
+from models import SecurityQuestion
 
 
 class SignUpForm(UserCreationForm):
@@ -18,13 +19,27 @@ class SignUpForm(UserCreationForm):
     categories = forms.ModelMultipleChoiceField(queryset=ProjectCategory.objects.all(),
                                                 help_text='Hold down "Control", or "Command" on a Mac, to select more than one.',
                                                 required=False)
+    security_questions = forms.ModelChoiceField(queryset=SecurityQuestion.objects.all(),
+                                                help_text='Choose a security question.', required=True)
+    answer = forms.CharField(max_length=200)
 
     class Meta:
         model = User
         fields = ('username', 'first_name', 'last_name', 'categories', 'company', 'email', 'password1', 'password2',
-                  'phone_number', 'street_address', 'city', 'state', 'postal_code', 'country')
+                  'security_question', 'answer', 'phone_number', 'street_address', 'city', 'state', 'postal_code',
+                  'country')
 
 
 class LoginForm(forms.Form):
     username = forms.CharField(required=True)
     password = forms.CharField(required=True, widget=forms.TextInput(attrs={"type": "password"}))
+
+
+class ForgotForm(forms.Form):
+    security_questions = forms.ModelChoiceField(queryset=SecurityQuestion.objects.all(),
+                                                help_text='Choose a security question.', required=True)
+    answer = forms.CharField(max_length=200)
+
+
+class EmailForm(forms.Form):
+    email = forms.EmailField(max_length=254)

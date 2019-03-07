@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, CreateView, FormView
 from django.core.mail import EmailMessage
-from .forms import SignUpForm, LoginForm
+from .forms import SignUpForm, LoginForm, ForgotForm, EmailForm
 from os import urandom
 from binascii import hexlify
 from django.contrib.auth.models import User
@@ -13,6 +13,7 @@ from django.template.loader import render_to_string
 from django.contrib.sites.models import Site
 from django.shortcuts import render, redirect
 import logging
+from .models import Profile, SecurityQuestion, SecurityQuestionUser
 
 logger = logging.getLogger(__name__)
 
@@ -67,7 +68,8 @@ class SignupView(CreateView):
         email_subject  = "[TDT4237] [GR9] Activate your user account."
         current_site = Site.objects.get_current()
 
-        email_content = render_to_string('user/email_template.html', {'user': user, 'domain': current_site.domain, 'token': user.profile.token})
+        email_content = render_to_string('user/email_template.html', {'user': user, 'domain': current_site.domain,
+                                                                      'token': user.profile.token})
 
         email = EmailMessage(email_subject, email_content, from_email='NO REPLY <noreply@gr9progsexy.ntnu.no>',
                              to=[user.profile.email], reply_to=['noreply@gr9progsexy.ntnu.no'])
@@ -94,6 +96,40 @@ class VerifyUser(View):
         return HttpResponseRedirect(reverse_lazy("home"))
 
 
-class ForgotPassword(View):
+class ForgotPassordEmail(FormView):
+    form_class = EmailForm
+    template_name = "user/enter_email.html"
 
-    pass
+    def form_valid(self, form):
+        profile = Profile.objects.get(email=form.cleaned_data.get("email"))
+        if profile is not None:
+            return redirect('')
+
+        return HttpResponse("No user with that email. Sorry bruh.")
+
+    def form_invalid(self, form):
+        return HttpResponse("u sux")
+
+
+class ForgotPassword(FormView):
+    form_class = ForgotForm
+    template_name = "user/forgot_password.html"
+
+    def form_valid(self, form):
+        email = self.kwargs['email']
+        profile = Profile.objects.get(email=email)
+
+        sec_q = SecurityQuestionUser.objects.get(User=profile.user)
+
+        if sec_q.security_question == form.cleaned_data.get('security_questions') and sec_q.answer == form.cleaned_data['answer']:
+            tmp_pw = hexlify(urandom(32)).decode("utf-8")
+            profile.tmp_login = True
+            profile.user.set_password(tmp_pw)
+            profile.save()
+            profile.user.save()
+
+            return HttpResponse("Your temporary password: {}".format(tmp_pw))
+
+        return HttpResponse("Fuck off")
+
+

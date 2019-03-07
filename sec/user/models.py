@@ -9,6 +9,7 @@ from django.dispatch import receiver
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    tmp_login = models.BooleanField(default=False)
     email = models.EmailField(max_length=100, blank=True)
     token = models.CharField(max_length=128, blank=True, null=True)
     company = models.TextField(max_length=50, blank=True)
@@ -40,3 +41,14 @@ def update_session(sender, request, **kwargs):
     else:
         request.user.profile.session_id = request.session.session_key
         request.user.profile.save()
+
+
+class SecurityQuestion(models.Model):
+    id = models.AutoField(primary_key=True)
+    question = models.CharField(max_length=200, null=False)
+
+
+class SecurityQuestionUser(models):
+    user = models.ForeignKey(User)
+    security_question = models.ForeignKey(SecurityQuestion)
+    answer = models.CharField(max_length=200, null=False)
