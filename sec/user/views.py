@@ -178,6 +178,7 @@ class ResetPassword(FormView):
             user.save()
 
             profile.tmp_login = False
+            profile.token = ''
             profile.save()
 
             messages.success(self.request, "Password changed successfully.")
