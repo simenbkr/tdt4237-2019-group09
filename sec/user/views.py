@@ -124,15 +124,16 @@ class ForgotPassword(FormView):
     def form_valid(self, form):
         email = self.kwargs['email']
         profile = Profile.objects.get(email=email)
-
+        user = profile.user
         sec_q = SecurityQuestionUser.objects.get(user=profile.user)
 
         if sec_q.security_question == form.cleaned_data.get('security_questions') and sec_q.answer == form.cleaned_data['answer']:
             tmp_pw = hexlify(urandom(32)).decode("utf-8")
             profile.tmp_login = True
-            profile.user.set_password(tmp_pw)
             profile.save()
-            profile.user.save()
+            user.set_password(tmp_pw)
+            user.save()
+
 
             return HttpResponse("Your temporary password: {}".format(tmp_pw))
 
