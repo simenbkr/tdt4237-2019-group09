@@ -48,10 +48,10 @@ class SimpleSessionMiddleware(SessionMiddleware):
                     )
                 response.set_cookie(
                     settings.SESSION_COOKIE_NAME,
-                    request.session.session_key, max_age=2**31,
+                    request.session.session_key, max_age=settings.SESSION_COOKIE_AGE,
                     domain=settings.SESSION_COOKIE_DOMAIN,
                     path=settings.SESSION_COOKIE_PATH,
-                    secure=False,
-                    httponly=False,
+                    secure=settings.SESSION_COOKIE_SECURE,
+                    httponly=settings.SESSION_COOKIE_HTTPONLY,
                 )
         return response
