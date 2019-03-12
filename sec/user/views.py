@@ -37,7 +37,7 @@ class LoginView(FormView):
         if self.request.user.is_authenticated:
             return HttpResponseRedirect(reverse_lazy('home'))
 
-        return super().dispatch(*args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
         try:
