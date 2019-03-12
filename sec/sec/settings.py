@@ -51,6 +51,7 @@ INSTALLED_APPS = [
 
 AUTHENTICATION_BACKENDS = [
     #'axes.backends.AxesModelBackend'
+    'django.contrib.auth.backends.ModelBackend'
 ]
 
 MIDDLEWARE = [
@@ -111,6 +112,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
+SESSION_COOKIE_NAME = 'session'
+SESSION_COOKIE_PATH = '/'
 
 SESSION_COOKIE_AGE = 3600
 SESSION_COOKIE_SECURE = False #Set to True when TLS/HTTPS is deployed.

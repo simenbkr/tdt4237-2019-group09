@@ -7,6 +7,7 @@ from django.contrib.sessions.backends.base import UpdateError
 from django.contrib.sessions.middleware import SessionMiddleware
 from django.core.exceptions import SuspiciousOperation
 from django.utils.cache import patch_vary_headers
+from django.contrib.sites.models import Site
 
 
 class InformationMiddleware:
@@ -33,7 +34,7 @@ class SimpleSessionMiddleware(SessionMiddleware):
                 response.delete_cookie(
                     settings.SESSION_COOKIE_NAME,
                     path=settings.SESSION_COOKIE_PATH,
-                    domain=settings.SESSION_COOKIE_DOMAIN,
+                    domain=Site.objects.get_current().domain,
                 )
             if accessed:
                 patch_vary_headers(response, ("Cookie",))
@@ -49,7 +50,7 @@ class SimpleSessionMiddleware(SessionMiddleware):
                 response.set_cookie(
                     settings.SESSION_COOKIE_NAME,
                     request.session.session_key, max_age=settings.SESSION_COOKIE_AGE,
-                    domain=settings.SESSION_COOKIE_DOMAIN,
+                    domain=Site.objects.get_current().domain,
                     path=settings.SESSION_COOKIE_PATH,
                     secure=settings.SESSION_COOKIE_SECURE,
                     httponly=settings.SESSION_COOKIE_HTTPONLY,
