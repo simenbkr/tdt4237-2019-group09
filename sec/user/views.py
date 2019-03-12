@@ -23,6 +23,7 @@ class IndexView(TemplateView):
 
 
 def logout(request):
+    request.session.delete()
     request.session = SessionStore()
     return HttpResponseRedirect(reverse_lazy("home"))
 
