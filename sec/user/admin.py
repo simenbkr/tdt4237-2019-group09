@@ -30,8 +30,8 @@ class CustomUserAdmin(UserAdmin):
         return super(CustomUserAdmin, self).get_inline_instances(request, obj)
 
 
-admin.site.unregister(User)
+admin.site.unregister(User)                    # TODO: COMMENT OUT THIS LINE REF OTG-CONFIG-005
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(SecurityQuestion)
 admin.site.register(SecurityQuestionUser)
-admin.site.register(Profile)
+admin.site.register(Profile)                   # TODO: COMMENT OUT THIS LINE REF OTG-CONFIG-005
