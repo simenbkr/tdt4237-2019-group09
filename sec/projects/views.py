@@ -1,8 +1,10 @@
 import os
 import stat
+import mimetypes
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
@@ -52,7 +54,6 @@ def new_project(request):
                                 connection=connection,
                             ).send()
                     except:
-                        from django.contrib import messages
                         messages.success(request, 'Sending of email to ' + person.user.email + " failed")
 
             task_title = request.POST.getlist('task_title')
@@ -167,7 +168,6 @@ def upload_file_to_task(request, project_id, task_id):
                             tft.read = True
                             tft.save()
                 else:
-                    from django.contrib import messages
                     messages.warning(request, "You do not have access to modify this file")
 
                 return redirect('task_view', project_id=project_id, task_id=task_id)
@@ -379,20 +379,33 @@ def task_permissions(request, project_id, task_id):
 
 @login_required
 def view_file(request, file_id):
-    if file_id is None:
-        return redirect('login')
-    
-    f = TaskFile.objects.get(pk=file_id)
+    try:
+        f = TaskFile.objects.get(pk=file_id)
+    except Exception:
+        messages.error(request, "Unknown file.")
+        return redirect('home')
+
     task = f.get_task()
 
     user_permissions = get_user_task_permissions(request.user, task)
 
     if not user_permissions['read']:
-        from django.contrib import messages
         messages.error(request, "You do not have permission to read this file.")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-    return FileResponse(open(f.file.path, 'rb'))
+    response = FileResponse(open(f.file.path, 'rb'))
+    t = mimetypes.guess_type(f.file.path)[0]
+    g = t.split('/')[0]
+    if g in ['audio', 'video', 'image', '']:
+        pass
+    elif g == 'text':
+        t = 'text/plain'
+    elif t == 'application/pdf':
+        pass
+    else:
+        t = 'application/octet-stream'
+    response['Content-Type'] = t
+    return response
 
 
 @login_required
@@ -403,12 +416,10 @@ def delete_file(request, file_id):
     user_permissions = get_user_task_permissions(request.user, task)
 
     if not user_permissions['modify'] and not user_permissions['write']:
-        from django.contrib import messages
         messages.error(request, "You do not have permission to delete this file.")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
     if task.status in ['dd', 'ps', 'pp']:
-        from django.contrib import messages
         messages.error(request, "This file can not be deleted right now.")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
