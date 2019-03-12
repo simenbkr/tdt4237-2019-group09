@@ -55,8 +55,7 @@ AUTHENTICATION_BACKENDS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    #'sec.middleware.SimpleSessionMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware'
+    'sec.middleware.SimpleSessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
