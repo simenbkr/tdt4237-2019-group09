@@ -68,7 +68,7 @@ class TaskPermissionForm(forms.Form):
     def __init__(self, task, *args, **kwargs):
         super(TaskPermissionForm, self).__init__()
         userpks = [a.user.pk for a in task.project.participants.all()]
-        user = User.objects.filter(pk__in=userpks)
+        self.fields['user'].queryset = User.objects.filter(pk__in=userpks)
 
 
 class DeliveryForm(forms.ModelForm):
