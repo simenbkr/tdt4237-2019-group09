@@ -23,6 +23,7 @@ class InformationMiddleware:
 class SimpleSessionMiddleware(SessionMiddleware):
 
     def process_response(self, request, response):
+        domain = Site.objects.get_current().domain.split(':')[0]
         try:
             accessed = request.session.accessed
             modified = request.session.modified
@@ -34,7 +35,7 @@ class SimpleSessionMiddleware(SessionMiddleware):
                 response.delete_cookie(
                     settings.SESSION_COOKIE_NAME,
                     path=settings.SESSION_COOKIE_PATH,
-                    domain=Site.objects.get_current().domain,
+                    domain=domain,
                 )
             if accessed:
                 patch_vary_headers(response, ("Cookie",))
@@ -50,7 +51,7 @@ class SimpleSessionMiddleware(SessionMiddleware):
                 response.set_cookie(
                     settings.SESSION_COOKIE_NAME,
                     request.session.session_key, max_age=settings.SESSION_COOKIE_AGE,
-                    domain=Site.objects.get_current().domain,
+                    domain=domain,
                     path=settings.SESSION_COOKIE_PATH,
                     secure=settings.SESSION_COOKIE_SECURE,
                     httponly=settings.SESSION_COOKIE_HTTPONLY,
