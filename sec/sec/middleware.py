@@ -52,8 +52,7 @@ class SimpleSessionMiddleware(SessionMiddleware):
                     expires = None
                 else:
                     max_age = request.session.get_expiry_age()
-                    expires = http_date(time.time() + max_age)
-
+                    expires = http_date(time() + max_age)
                 try:
                     request.session.save()
                 except UpdateError:
