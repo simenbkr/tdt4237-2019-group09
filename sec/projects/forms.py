@@ -69,7 +69,7 @@ class TaskPermissionForm(forms.Form):
         super(TaskPermissionForm, self).__init__()
         #task.project.participants
         #profiles = Profile.objects.filter(pk)
-        userpks = [a.user.pk for a in task.project.participants]
+        userpks = [a.user.pk for a in task.project.participants.all()]
         self.fields['user'].queryset = User.objects.filter(pk__in=userpks)
 
 
