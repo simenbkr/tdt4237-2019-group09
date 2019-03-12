@@ -2,9 +2,11 @@ import os
 import stat
 import mimetypes
 
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.contrib import messages
+from django.contrib.sites.shortcuts import get_current_site
+from django.core import mail
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
@@ -31,7 +33,6 @@ class ProjectsView(TemplateView):
 
 @login_required
 def new_project(request):
-    from django.contrib.sites.shortcuts import get_current_site
     current_site = get_current_site(request)
     if request.method == 'POST':
         form = ProjectForm(request.POST)
@@ -42,7 +43,6 @@ def new_project(request):
             project.save()
 
             people = Profile.objects.filter(categories__id=project.category.id)
-            from django.core import mail
             for person in people:
                 if person.user.email:
                     try:
@@ -396,14 +396,17 @@ def view_file(request, file_id):
     response = FileResponse(open(f.file.path, 'rb'))
     t = mimetypes.guess_type(f.file.path)[0]
     g = t.split('/')[0]
+    response['Content-Disposition'] = f'inline; filename="{f.name()}"'
     if g in ['audio', 'video', 'image', '']:
         pass
-    elif g == 'text':
+    elif g == 'text' or t == 'application/javascript':
         t = 'text/plain'
     elif t == 'application/pdf':
         pass
     else:
         t = 'application/octet-stream'
+        response['Content-Disposition'] = f'attachment; filename="{f.name()}"'
+    
     response['Content-Type'] = t
     return response
 
