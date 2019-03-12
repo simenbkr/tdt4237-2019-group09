@@ -33,6 +33,12 @@ class LoginView(FormView):
     template_name = "user/login.html"
     success_url = reverse_lazy("home")
 
+    def dispatch(self, request, *args, **kwargs):
+        if self.request.user.is_authenticated:
+            return HttpResponseRedirect(reverse_lazy('home'))
+
+        return super().dispatch(request, *args, **kwargs)
+
     def form_valid(self, form):
         try:
             from django.contrib.auth import authenticate
@@ -50,6 +56,7 @@ class LoginView(FormView):
 
     def form_invalid(self, form):
         return super().form_invalid(form)
+
 
 
 
