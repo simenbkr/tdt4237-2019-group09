@@ -379,6 +379,9 @@ def task_permissions(request, project_id, task_id):
 
 @login_required
 def view_file(request, file_id):
+    if file_id is None:
+        return redirect('login')
+    
     f = TaskFile.objects.get(pk=file_id)
     task = f.get_task()
 
@@ -389,7 +392,7 @@ def view_file(request, file_id):
         messages.error(request, "You do not have permission to read this file.")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-    return FileResponse(open(f.file, 'rb'))
+    return FileResponse(open(f.file.path, 'rb'))
 
 
 @login_required
