@@ -115,6 +115,12 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+AXES_FAILURE_LIMIT = 2
+AXES_COOLOFF_TIME = 1
+AXES_LOCKOUT_URL = "http://www.spredet.no/wp-content/uploads/2008/12/elin_siv-jensenhummer500.jpg"
+
+
+
 SESSION_COOKIE_NAME = 'session'
 SESSION_COOKIE_PATH = '/'
 
