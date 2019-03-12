@@ -379,6 +379,9 @@ def task_permissions(request, project_id, task_id):
 
 @login_required
 def view_file(request, file_id):
+    if file_id is None:
+        return redirect('login')
+    
     f = TaskFile.objects.get(pk=file_id)
     task = f.get_task()
 
