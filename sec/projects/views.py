@@ -348,7 +348,7 @@ def task_permissions(request, project_id, task_id):
         task = Task.objects.get(pk=task_id)
         if int(project_id) == task.project.id:
             if request.method == 'POST':
-                task_permission_form = TaskPermissionForm(request.POST)
+                task_permission_form = TaskPermissionForm(task, request.POST)
                 if task_permission_form.is_valid():
                     try:
                         username = task_permission_form.cleaned_data['user']
@@ -364,7 +364,7 @@ def task_permissions(request, project_id, task_id):
                         print("user not found")
                     return redirect('task_view', project_id=project_id, task_id=task_id)
 
-            task_permission_form = TaskPermissionForm()
+            task_permission_form = TaskPermissionForm(task)
             return render(
                 request,
                 'projects/task_permissions.html',

@@ -22,7 +22,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '$n%^#g%qx#82w6t^dvjqwv)q*1cy+fwh1ohku7-rbjqcei2^jr'
+#SECRET_KEY = '$n%^#g%qx#82w6t^dvjqwv)q*1cy+fwh1ohku7-rbjqcei2^jr'
+SECRET_KEY = 'uq9qv*an-4r!q7c*nts172f8uf(c(mdqo@0h6#851p9e!yz+fm'
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -51,6 +53,7 @@ INSTALLED_APPS = [
 
 AUTHENTICATION_BACKENDS = [
     #'axes.backends.AxesModelBackend'
+    'django.contrib.auth.backends.ModelBackend'
 ]
 
 MIDDLEWARE = [
@@ -112,11 +115,14 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+SESSION_COOKIE_NAME = 'session'
+SESSION_COOKIE_PATH = '/'
+
 SESSION_COOKIE_AGE = 3600
 SESSION_COOKIE_SECURE = False #Set to True when TLS/HTTPS is deployed.
 SESSION_COOKIE_HTTPONLY = True
 SESSION_SAVE_EVERY_REQUEST = False
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
 PASSWORD_RESET_TIMEOUT_DAYS = 1
 

@@ -23,6 +23,7 @@ class IndexView(TemplateView):
 
 
 def logout(request):
+    request.session.delete()
     request.session = SessionStore()
     return HttpResponseRedirect(reverse_lazy("home"))
 
@@ -111,10 +112,12 @@ class ForgotPassordEmail(FormView):
         if profile is not None:
             return redirect('{}'.format(profile.email))
 
-        return HttpResponse("No user with that email. Sorry bruh.")
+        form.add_error("No user with that email.")
+        super().form_invalid(form)
 
     def form_invalid(self, form):
-        return HttpResponse("u sux")
+        form.add_error("Invalid email!")
+        return super().form_invalid(form)
 
 
 class ForgotPassword(FormView):
@@ -128,7 +131,6 @@ class ForgotPassword(FormView):
         sec_q = SecurityQuestionUser.objects.get(user=profile.user)
 
         if sec_q.security_question == form.cleaned_data.get('security_questions') and sec_q.answer == form.cleaned_data['answer']:
-            #tmp_pw = User.objects.make_random_password()
             tmp_pw = hexlify(urandom(32)).decode("utf-8")
 
             profile.tmp_login = True
@@ -146,14 +148,26 @@ class ForgotPassword(FormView):
 
             email.send()
 
-            return HttpResponse("Your temporary password, with a link to login has been sent to your email")
+            messages.success("Your temporary password, with a link to login has been sent to your email")
+            return HttpResponseRedirect(reverse_lazy('home'))
 
-        return HttpResponse("Fuck off")
+        messages.warning(self.request, "Something went wrong.. Please try again.")
+        return HttpResponseRedirect(reverse_lazy('home'))
 
 
 class ResetPassword(FormView):
     form_class = ResetForm
     template_name = "user/reset.html"
+
+    def get(self, request, *args, **kwargs):
+        profile = Profile.objects.get(email=kwargs['email'])
+        if kwargs['token'] != profile.token:
+            messages.warning(request, "Disallowed action! You do not have the correct token.")
+            return HttpResponseRedirect(reverse_lazy('home'))
+
+        else:
+            return render(request, "user/reset.html", {'form': ResetForm})
+
 
     def form_valid(self, form):
         email = self.kwargs['email']
@@ -169,9 +183,11 @@ class ResetPassword(FormView):
             user.save()
 
             profile.tmp_login = False
+            profile.token = ''
             profile.save()
 
-            messages.success("Password changed successfully.")
+            messages.success(self.request, "Password changed successfully.")
             return HttpResponseRedirect(reverse_lazy('home'))
 
-        return HttpResponse("Du suger as")
+        messages.warning(self.request, "Something went wrong.. Please try again.")
+        return HttpResponseRedirect(reverse_lazy('home'))
