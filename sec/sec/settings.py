@@ -48,11 +48,11 @@ INSTALLED_APPS = [
     'django_icons',
     'payment.apps.PaymentConfig',
     'django.contrib.sites',
-    #'axes'
+    'axes'
 ]
 
 AUTHENTICATION_BACKENDS = [
-    #'axes.backends.AxesModelBackend'
+    'axes.backends.AxesModelBackend'
     'django.contrib.auth.backends.ModelBackend'
 ]
 
