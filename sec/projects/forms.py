@@ -62,8 +62,15 @@ PERMISSION_CHOICES = (
 
 
 class TaskPermissionForm(forms.Form):
-    user = forms.ModelChoiceField(queryset=User.objects.all())
+    # user = forms.ModelChoiceField(queryset=User.objects.all())
     permission = forms.ChoiceField(choices=PERMISSION_CHOICES)
+
+    def __init__(self, task, *args, **kwargs):
+        super(TaskPermissionForm, self).__init__()
+        #task.project.participants
+        #profiles = Profile.objects.filter(pk)
+        userpks = [a.user.pk for a in task.project.participants]
+        self.fields['user'].queryset = User.objects.filter(pk__in=userpks)
 
 
 class DeliveryForm(forms.ModelForm):
