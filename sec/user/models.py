@@ -80,6 +80,11 @@ class AccessAttempt(models.Model):
 
 
 def allowed_to_login(request):
+    """
+    After LOCKOUT_COUNT attempts in the last COOLDOWN_TIME hours, the client behind the requests IP is no longer
+    allowed to attempt logins.
+    """
+
     ip = get_client_ip(request)
     newer_than = datetime.now() - timedelta(settings.COOLDOWN_TIME)
     count = len(list(AccessAttempt.objects.filter(attempt_time__gt=newer_than).filter(ip_addr=ip)))
@@ -88,7 +93,10 @@ def allowed_to_login(request):
 
 
 @receiver(user_login_failed)
-def hande_failed_login(sender, credentials, request, **kwargs):
+def handle_failed_login(sender, credentials, request, **kwargs):
+    """
+    Log the information belonging to the client attempting to log in.
+    """
 
     ip = get_client_ip(request)
 
@@ -100,3 +108,11 @@ def hande_failed_login(sender, credentials, request, **kwargs):
     a.username = credentials['username']
     a.save()
 
+
+@receiver(user_logged_in)
+def handle_logged_in(sender, credentials, request, **kwargs):
+    """
+    Reset the attempts made by this client on this user and ip touple.
+    """
+    ip = get_client_ip(request)
+    AccessAttempt.objects.filter(ip_addr=ip).filter(username=credentials['username']).delete()
