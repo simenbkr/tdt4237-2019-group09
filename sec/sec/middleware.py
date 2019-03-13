@@ -12,7 +12,7 @@ from django.contrib.sites.models import Site
 from django.utils.http import http_date
 from user.models import allowed_to_login
 from django.shortcuts import render
-
+from django.urls import reverse
 
 class InformationMiddleware:
 
@@ -86,7 +86,7 @@ class RestrictAdminPage(object):
         return response
 
     def process_request(self, request):
-        if request.path.startswith('admin'):
+        if request.path.startswith(reverse('admin:index')):
             if not allowed_to_login(request):
                 return render(request,
                               '{}/sec/templates/failed_login.html'.format(settings.BASE_DIR),
