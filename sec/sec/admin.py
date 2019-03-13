@@ -4,9 +4,8 @@ from django.forms import ValidationError
 from datetime import datetime, timedelta
 from django.shortcuts import render
 from django.conf import settings
-from ..user.models import AccessAttempt, get_client_ip
+from user.models import AccessAttempt, get_client_ip, User
 from django.contrib import admin
-
 
 
 class CustomAdminLoginForm(AuthenticationForm):
@@ -50,3 +49,4 @@ class CustomAdminLoginSite(admin.AdminSite):
 
 
 admin_site = CustomAdminLoginSite()
+admin_site.register(User)
