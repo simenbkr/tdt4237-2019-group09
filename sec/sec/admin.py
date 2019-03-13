@@ -20,6 +20,9 @@ class CustomAdminLoginForm(AuthenticationForm):
                           '{}/sec/templates/failed_login.html'.format(settings.BASE_DIR),
                           {'failure_limit': count})
 
+        super(CustomAdminLoginForm, self).clean()
+        return self.cleaned_data
+        """
         user = self.cleaned_data.get('username')
         password = self.cleaned_data.get('password')
 
@@ -39,6 +42,7 @@ class CustomAdminLoginForm(AuthenticationForm):
                 self.confirm_login_allowed(self.user_cache)
 
         return self.cleaned_data
+        """
 
 
 class CustomAdminLoginSite(admin.AdminSite):
