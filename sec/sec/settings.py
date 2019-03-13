@@ -48,7 +48,6 @@ INSTALLED_APPS = [
     'django_icons',
     'payment.apps.PaymentConfig',
     'django.contrib.sites',
-    'defender'
 ]
 
 AUTHENTICATION_BACKENDS = [
@@ -64,7 +63,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'sec.middleware.InformationMiddleware',
-    'defender.middleware.FailedLoginMiddleware',
 ]
 
 ROOT_URLCONF = 'sec.urls'
@@ -117,6 +115,7 @@ AUTH_PASSWORD_VALIDATORS = [
 DEFENDER_REVERSE_PROXY_HEADER = 'X-Real-IP'
 DEFENDER_LOCKOUT_TEMPLATE = '{}/sec/templates/failed_login.html'.format(BASE_DIR)
 
+LOCKOUT_COUNT = 3
 
 SESSION_COOKIE_NAME = 'session'
 SESSION_COOKIE_PATH = '/'

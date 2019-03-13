@@ -15,6 +15,10 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 import logging
 from .models import Profile, SecurityQuestion, SecurityQuestionUser
+from sec.sec.models import AccessAttempt, get_client_ip
+from django.contrib.auth.signals import user_logged_in, user_logged_out, user_login_failed
+from django.conf import settings
+
 
 logger = logging.getLogger(__name__)
 
@@ -27,6 +31,7 @@ def logout(request):
     request.session = SessionStore()
     return HttpResponseRedirect(reverse_lazy("home"))
 
+
 class LoginView(FormView):
     form_class = LoginForm
     template_name = "user/login.html"
@@ -35,6 +40,10 @@ class LoginView(FormView):
     def dispatch(self, request, *args, **kwargs):
         if self.request.user.is_authenticated:
             return HttpResponseRedirect(reverse_lazy('home'))
+
+        ip = get_client_ip(self.request)
+        if len(list(AccessAttempt.objects.get(ip_addr=ip))) > 3:
+            return render(self.request, '{}/sec/templates/failed_login.html'.format(settings.BASE_DIR), {})
 
         return super().dispatch(request, *args, **kwargs)
 
@@ -49,8 +58,16 @@ class LoginView(FormView):
             pass
 
         ip = self.request.META.get('REMOTE_ADDR')
+        user_login_failed.send(
+            sender=User,
+            request=self.request,
+            credentials={
+                'username': form.cleaned_data['username']
+            }
+        )
         logger.warning('invalid log-in attempt for user: {} from {}'.format(form.cleaned_data['username'], ip))
         form.add_error(None, "Provide a valid username and/or password")
+
         return super().form_invalid(form)
 
     def form_invalid(self, form):
