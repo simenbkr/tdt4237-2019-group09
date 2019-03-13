@@ -53,7 +53,6 @@ INSTALLED_APPS = [
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
-    'axes.backends.AxesBackend',
 ]
 
 MIDDLEWARE = [

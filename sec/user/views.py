@@ -15,8 +15,6 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 import logging
 from .models import Profile, SecurityQuestion, SecurityQuestionUser
-from django.utils.decorators import method_decorator
-from axes.decorators import axes_dispatch
 
 logger = logging.getLogger(__name__)
 
@@ -29,7 +27,6 @@ def logout(request):
     request.session = SessionStore()
     return HttpResponseRedirect(reverse_lazy("home"))
 
-@method_decorator(axes_dispatch, name='dispatch')
 class LoginView(FormView):
     form_class = LoginForm
     template_name = "user/login.html"
