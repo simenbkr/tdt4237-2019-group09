@@ -80,7 +80,10 @@ class RestrictAdminPage(object):
         self.get_response = get_response
 
     def __call__(self, request):
-        return self.get_response(request)
+        response = self.process_request(request)
+        if response is None:
+            return self.get_response(request)
+        return response
 
     def process_request(self, request):
         if request.path.startswith('admin'):
