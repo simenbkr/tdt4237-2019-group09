@@ -13,7 +13,7 @@ def get_client_ip(request):
     return ip
 
 
-class AccessAttempt(models):
+class AccessAttempt(models.Model):
     user_agent = models.CharField(max_length=255, blank=True)
     ip_addr = models.GenericIPAddressField()
     username = models.CharField(max_length=255)
