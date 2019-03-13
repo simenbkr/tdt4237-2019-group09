@@ -2,7 +2,7 @@ from user.models import AccessAttempt
 from django.core.management.base import BaseCommand
 
 
-class AccessCommand(BaseCommand):
+class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
@@ -25,10 +25,12 @@ class AccessCommand(BaseCommand):
 
         parser.add_argument(
             '--reset',
-            help='Reset the login attempts for all IPs'
+            help='Reset the login attempts for all IPs',
+            default=1
         )
 
         parser.add_argument(
             '--list',
-            help='List login attempts.'
+            help='List login attempts.',
+            default=1
         )
