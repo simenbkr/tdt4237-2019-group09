@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'django_icons',
     'payment.apps.PaymentConfig',
     'django.contrib.sites',
-    'axes'
+    'defender'
 ]
 
 AUTHENTICATION_BACKENDS = [
@@ -65,7 +65,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'sec.middleware.InformationMiddleware',
-    'axes.middleware.AxesMiddleware',
+    'defender.middleware.FailedLoginMiddleware',
 ]
 
 ROOT_URLCONF = 'sec.urls'
@@ -115,12 +115,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-AXES_FAILURE_LIMIT = 5
-AXES_COOLOFF_TIME = 1
-#AXES_LOCKOUT_URL = "http://www.spredet.no/wp-content/uploads/2008/12/elin_siv-jensenhummer500.jpg"
-AXES_LOCKOUT_TEMPLATE = "{}/sec/templates/failed_login.html".format(BASE_DIR)
-AXES_PROXY_COUNT = 1
+DEFENDER_REVERSE_PROXY_HEADER = 'X-Real-IP'
+DEFENDER_LOCKOUT_TEMPLATE = '{}/sec/templates/failed_login.html'.format(BASE_DIR)
 
 
 SESSION_COOKIE_NAME = 'session'
