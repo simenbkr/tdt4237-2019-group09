@@ -14,8 +14,7 @@ from django.contrib.sites.models import Site
 from django.shortcuts import render, redirect
 from django.contrib import messages
 import logging
-from .models import Profile, SecurityQuestion, SecurityQuestionUser
-from sec.sec.models import AccessAttempt, get_client_ip
+from .models import Profile, SecurityQuestion, SecurityQuestionUser, AccessAttempt, get_client_ip
 from django.contrib.auth.signals import user_logged_in, user_logged_out, user_login_failed
 from django.conf import settings
 
