@@ -41,7 +41,7 @@ class LoginView(FormView):
         if self.request.user.is_authenticated:
             return HttpResponseRedirect(reverse_lazy('home'))
 
-        if allowed_to_login(request):
+        if not allowed_to_login(request):
             return render(self.request,
                           '{}/sec/templates/failed_login.html'.format(settings.BASE_DIR),
                           {'failure_limit': settings.LOCKOUT_COUNT})

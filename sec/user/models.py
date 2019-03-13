@@ -84,7 +84,7 @@ def allowed_to_login(request):
     newer_than = datetime.now() - timedelta(settings.COOLDOWN_TIME)
     count = len(list(AccessAttempt.objects.filter(attempt_time__gt=newer_than).filter(ip_addr=ip)))
 
-    return count > settings.LOCKOUT_COUNT
+    return count < settings.LOCKOUT_COUNT
 
 
 @receiver(user_login_failed)

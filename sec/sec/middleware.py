@@ -87,11 +87,11 @@ class RestrictAdminPage(object):
         return response
 
     def process_request(self, request):
-        if request.path.startswith(reverse('admin:index')):
+
+        if request.path.startswith(reverse('admin:login')):
             if not allowed_to_login(request):
-                return HttpResponseForbidden()
-                #return render(request,
-                #              '{}/sec/templates/failed_login.html'.format(settings.BASE_DIR),
-                #              {'failure_limit': settings.LOCKOUT_COUNT})
+                return render(request,
+                              '{}/sec/templates/failed_login.html'.format(settings.BASE_DIR),
+                              {'failure_limit': settings.LOCKOUT_COUNT})
 
         return None
