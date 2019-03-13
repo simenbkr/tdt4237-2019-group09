@@ -13,6 +13,7 @@ from django.utils.http import http_date
 from user.models import allowed_to_login
 from django.shortcuts import render
 from django.urls import reverse
+from django.http import HttpResponseForbidden
 
 class InformationMiddleware:
 
@@ -88,8 +89,9 @@ class RestrictAdminPage(object):
     def process_request(self, request):
         if request.path.startswith(reverse('admin:index')):
             if not allowed_to_login(request):
-                return render(request,
-                              '{}/sec/templates/failed_login.html'.format(settings.BASE_DIR),
-                              {'failure_limit': settings.LOCKOUT_COUNT})
+                return HttpResponseForbidden()
+                #return render(request,
+                #              '{}/sec/templates/failed_login.html'.format(settings.BASE_DIR),
+                #              {'failure_limit': settings.LOCKOUT_COUNT})
 
         return None
