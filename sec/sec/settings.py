@@ -63,6 +63,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'sec.middleware.InformationMiddleware',
+    'sec.middleware.RestrictAdminPage',
 ]
 
 ROOT_URLCONF = 'sec.urls'

@@ -10,6 +10,8 @@ from django.core.exceptions import SuspiciousOperation
 from django.utils.cache import patch_vary_headers
 from django.contrib.sites.models import Site
 from django.utils.http import http_date
+from user.models import allowed_to_login
+from django.shortcuts import render
 
 
 class InformationMiddleware:
@@ -70,3 +72,13 @@ class SimpleSessionMiddleware(SessionMiddleware):
                     httponly=settings.SESSION_COOKIE_HTTPONLY,
                 )
         return response
+
+
+class RestrictAdminPage(object):
+
+    def process_request(self, request):
+        if request.path.startswith('admin'):
+            if not allowed_to_login(request):
+                return render(request,
+                              '{}/sec/templates/failed_login.html'.format(settings.BASE_DIR),
+                              {'failure_limit': settings.LOCKOUT_COUNT})

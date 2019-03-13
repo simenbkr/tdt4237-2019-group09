@@ -14,10 +14,9 @@ from django.contrib.sites.models import Site
 from django.shortcuts import render, redirect
 from django.contrib import messages
 import logging
-from .models import Profile, SecurityQuestion, SecurityQuestionUser, AccessAttempt, get_client_ip
+from .models import Profile, SecurityQuestionUser, allowed_to_login
 from django.contrib.auth.signals import user_logged_in, user_logged_out, user_login_failed
 from django.conf import settings
-from datetime import datetime, timedelta
 
 
 logger = logging.getLogger(__name__)
@@ -42,13 +41,10 @@ class LoginView(FormView):
         if self.request.user.is_authenticated:
             return HttpResponseRedirect(reverse_lazy('home'))
 
-        ip = get_client_ip(self.request)
-        newer_than = datetime.now() - timedelta(settings.COOLDOWN_TIME)
-        count = len(list(AccessAttempt.objects.filter(attempt_time__gt=newer_than).filter(ip_addr=ip)))
-        if count > 3:
+        if allowed_to_login(request):
             return render(self.request,
                           '{}/sec/templates/failed_login.html'.format(settings.BASE_DIR),
-                          {'failure_limit': count})
+                          {'failure_limit': settings.LOCKOUT_COUNT})
 
         return super().dispatch(request, *args, **kwargs)
 

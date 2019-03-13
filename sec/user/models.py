@@ -5,7 +5,8 @@ from django.db.models.signals import post_save
 from django.db import models
 from django.dispatch import receiver
 from django.contrib.auth.signals import user_logged_in, user_logged_out, user_login_failed
-from datetime import datetime
+from datetime import datetime, timedelta
+from django.conf import settings
 
 
 class Profile(models.Model):
@@ -76,6 +77,14 @@ class AccessAttempt(models.Model):
     username = models.CharField(max_length=255)
     attempt_time = models.DateTimeField()
     login_valid = models.BooleanField()
+
+
+def allowed_to_login(request):
+    ip = get_client_ip(request)
+    newer_than = datetime.now() - timedelta(settings.COOLDOWN_TIME)
+    count = len(list(AccessAttempt.objects.filter(attempt_time__gt=newer_than).filter(ip_addr=ip)))
+
+    return count > settings.LOCKOUT_COUNT
 
 
 @receiver(user_login_failed)
