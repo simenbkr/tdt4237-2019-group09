@@ -41,7 +41,7 @@ class LoginView(FormView):
             return HttpResponseRedirect(reverse_lazy('home'))
 
         ip = get_client_ip(self.request)
-        if len(list(AccessAttempt.objects.get(ip_addr=ip))) > 3:
+        if len(list(AccessAttempt.objects.filter(ip_addr=ip))) > 3:
             return render(self.request, '{}/sec/templates/failed_login.html'.format(settings.BASE_DIR), {})
 
         return super().dispatch(request, *args, **kwargs)
