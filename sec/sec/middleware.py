@@ -76,6 +76,9 @@ class SimpleSessionMiddleware(SessionMiddleware):
 
 class RestrictAdminPage(object):
 
+    def __init__(self, get_response):
+        self.get_response = get_response
+
     def process_request(self, request):
         if request.path.startswith('admin'):
             if not allowed_to_login(request):
