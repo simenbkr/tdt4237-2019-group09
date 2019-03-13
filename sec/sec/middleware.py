@@ -82,3 +82,5 @@ class RestrictAdminPage(object):
                 return render(request,
                               '{}/sec/templates/failed_login.html'.format(settings.BASE_DIR),
                               {'failure_limit': settings.LOCKOUT_COUNT})
+
+        return None
