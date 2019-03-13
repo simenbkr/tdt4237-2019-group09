@@ -4,10 +4,10 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.forms import ValidationError
-from .models import Profile, SecurityQuestion, SecurityQuestionUser
+from .models import Profile, SecurityQuestion, SecurityQuestionUser, AccessAttempt, get_client_ip
 from datetime import datetime, timedelta
-from ..user.models import AccessAttempt, get_client_ip
 from django.shortcuts import render
+from django.conf import settings
 
 
 class CustomAdminLoginForm(AuthenticationForm):
@@ -77,7 +77,7 @@ class CustomAdminLoginSite(admin.AdminSite):
 
 admin_site = CustomAdminLoginSite()
 
-admin_site.unregister(User)                    # TODO: COMMENT OUT THIS LINE REF OTG-CONFIG-005
+#admin_site.unregister(User)                    # TODO: COMMENT OUT THIS LINE REF OTG-CONFIG-005
 admin_site.register(User, CustomUserAdmin)
 admin_site.register(SecurityQuestion)
 admin_site.register(SecurityQuestionUser)
