@@ -62,7 +62,7 @@ class SecurityQuestionUser(models.Model):
 
 
 def get_client_ip(request):
-    x_real_ip = request.META.get('X-Real-IP')
+    x_real_ip = request.META.get('HTTP_X_REAL_IP')
     if x_real_ip:
         ip = x_real_ip.split(',')[0]
     else:
