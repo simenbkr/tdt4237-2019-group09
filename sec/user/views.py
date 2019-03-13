@@ -22,6 +22,7 @@ from datetime import datetime, timedelta
 
 logger = logging.getLogger(__name__)
 
+
 class IndexView(TemplateView):
     template_name = "sec/base.html"
 
