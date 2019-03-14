@@ -5,6 +5,7 @@
 # If we are not, the configuration files for the nginx and group09 services must be edited.
 
 DOMAIN='progsexy.flyktig.no' # Update this shizzle.
+PORT=4009
 
 apt update && apt install nginx python3 python3-pip -y
 
@@ -35,7 +36,7 @@ chmod 600 $PWD/sec/db.sqlite3
 
 python sec/manage.py clearsessions
 
-sqlite3 sec/db.sqlite3 "update django_site set name='$DOMAIN',domain='51.15.69.105:4009';"
+sqlite3 sec/db.sqlite3 "update django_site set name='$DOMAIN:$PORT',domain='$DOMAIN:$PORT';"
 
 systemctl daemon-reload
 systemctl start group09
