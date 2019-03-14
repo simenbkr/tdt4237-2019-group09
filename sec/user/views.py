@@ -124,14 +124,14 @@ class VerifyUser(View):
             user.profile.token = ''
             user.profile.save()
 
-            messages.warning(request, "Your email was successfully verified. Please login.")
+            messages.success(request, "Your email was successfully verified. Please login.")
             return HttpResponseRedirect(reverse_lazy("home"))
 
         messages.warning(request, "Your e-mail could not be verified. Please try again.")
         return HttpResponseRedirect(reverse_lazy("home"))
 
 
-class ForgotPassordEmail(FormView):
+class ForgotPasswordEmail(FormView):
     form_class = EmailForm
     template_name = "user/enter_email.html"
 
