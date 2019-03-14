@@ -7,7 +7,9 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
 
         objects = AccessAttempt.objects.all()
-        out = ''
+        out = 'IP address | Username | Time | User agent | Valid?\n'
+        out += "="*100
+        out += "\n"
         for object in objects:
             out += "{} | {} | {} | {} | {}".format(object.ip_addr, object.username, object.attempt_time,
                                                        object.user_agent, object.login_valid)
