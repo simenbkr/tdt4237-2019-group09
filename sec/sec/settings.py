@@ -27,7 +27,7 @@ SECRET_KEY = 'uq9qv*an-4r!q7c*nts172f8uf(c(mdqo@0h6#851p9e!yz+fm'
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 DOMAIN = 'progsexy.flyktig.no'
 PORT = 4009

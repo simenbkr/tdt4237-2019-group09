@@ -34,8 +34,8 @@ class CustomUserAdmin(UserAdmin):
 
 
 
-admin.site.unregister(User)                    # TODO: COMMENT OUT THIS LINE REF OTG-CONFIG-005
-admin.site.register(User, CustomUserAdmin)
+#admin.site.unregister(User)                    # TODO: COMMENT OUT THIS LINE REF OTG-CONFIG-005
+#admin.site.register(User, CustomUserAdmin)
 admin.site.register(SecurityQuestion)
-admin.site.register(SecurityQuestionUser)
-admin.site.register(Profile)                   # TODO: COMMENT OUT THIS LINE REF OTG-CONFIG-005
+#admin.site.register(SecurityQuestionUser)
+#admin.site.register(Profile)                   # TODO: COMMENT OUT THIS LINE REF OTG-CONFIG-005
