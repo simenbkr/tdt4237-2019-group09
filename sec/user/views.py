@@ -54,9 +54,9 @@ class LoginView(FormView):
 
         from django.contrib.auth import authenticate
         user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
-        
+
         if user is not None and user.profile.tmp_login:
-            return HttpResponseRedirect(('/user/forgot/{}/{}'.format(user.profile.email, user.profile.token))
+            return HttpResponseRedirect(('/user/forgot/{}/{}'.format(user.profile.email, user.profile.token)))
 
         if user is not None:
             login(self.request, user)
