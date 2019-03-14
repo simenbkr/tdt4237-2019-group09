@@ -13,6 +13,10 @@ virtualenv -p python3 venv
 source venv/bin/activate
 pip3 install -r requirements.txt
 
+echo 'STATIC_ROOT = "/srv/www-data/group09/static/"
+MEDIA_ROOT = "/srv/www-data/group09/media/"' > sec/sec/local_settings.py
+
+
 python sec/manage.py makemigrations
 python sec/manage.py migrate
 python sec/manage.py loaddata init.json
