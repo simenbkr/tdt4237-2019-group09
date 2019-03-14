@@ -13,6 +13,7 @@ class Command(BaseCommand):
                                                        object.user_agent, object.login_valid)
             out += "\n"
             out += "="*100
+            out += "\n"
 
         print(out)
         print("{} records shown.".format(len(list(objects))))
