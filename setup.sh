@@ -12,6 +12,7 @@ pip3 install virtualenv
 virtualenv -p python3 venv
 source venv/bin/activate
 pip3 install -r requirements.txt
+pip3 install argon2 django[argon2] #OMEGALUL
 
 echo 'STATIC_ROOT = "/srv/www-data/group09/static/"
 MEDIA_ROOT = "/srv/www-data/group09/media/"' > sec/sec/local_settings.py
