@@ -113,11 +113,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+DEFENDER_REVERSE_PROXY_HEADER = 'X-Real-IP'
+DEFENDER_LOCKOUT_TEMPLATE = '{}/sec/templates/failed_login.html'.format(BASE_DIR)
+
 LOCKOUT_COUNT = 3  # Attempts
 COOLDOWN_TIME = 1  # Hours
-
-BASE_URL = 'progsexy.flyktig.no'
-PORT = 4009
 
 SESSION_COOKIE_NAME = 'session'
 SESSION_COOKIE_PATH = '/'
@@ -165,6 +165,7 @@ EMAIL_HOST = 'smtp.stud.ntnu.no'
 #EMAIL_PORT = 25
 EMAIL_PORT = 6969
 
+SITE_ID = 1
 
 
 try:

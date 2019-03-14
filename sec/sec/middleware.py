@@ -3,16 +3,16 @@ import sys
 import platform
 from time import time
 
+from django.conf import settings
 from django.contrib.sessions.backends.base import UpdateError
 from django.contrib.sessions.middleware import SessionMiddleware
 from django.core.exceptions import SuspiciousOperation
 from django.utils.cache import patch_vary_headers
+from django.contrib.sites.models import Site
 from django.utils.http import http_date
 from user.models import allowed_to_login, AccessAttempt
 from django.shortcuts import render
 from django.urls import reverse
-from django.conf import settings
-
 
 
 class InformationMiddleware:
@@ -32,6 +32,7 @@ class SimpleSessionMiddleware(SessionMiddleware):
         request.session = self.SessionStore(session_token)
 
     def process_response(self, request, response):
+        domain = Site.objects.get_current().domain.split(':')[0]
         try:
             accessed = request.session.accessed
             modified = request.session.modified
@@ -43,7 +44,7 @@ class SimpleSessionMiddleware(SessionMiddleware):
                 response.delete_cookie(
                     settings.SESSION_COOKIE_NAME,
                     path=settings.SESSION_COOKIE_PATH,
-                    domain=settings.BASE_URL,
+                    domain=domain,
                 )
             if accessed:
                 patch_vary_headers(response, ("Cookie",))
@@ -66,7 +67,7 @@ class SimpleSessionMiddleware(SessionMiddleware):
                 response.set_cookie(
                     settings.SESSION_COOKIE_NAME,
                     request.session.session_key, max_age=max_age, expires=expires,
-                    domain=settings.BASE_URL,
+                    domain=domain,
                     path=settings.SESSION_COOKIE_PATH,
                     secure=settings.SESSION_COOKIE_SECURE,
                     httponly=settings.SESSION_COOKIE_HTTPONLY,

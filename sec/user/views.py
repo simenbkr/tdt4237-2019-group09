@@ -10,6 +10,7 @@ from binascii import hexlify
 from django.contrib.auth.models import User
 from django.views import View
 from django.template.loader import render_to_string
+from django.contrib.sites.models import Site
 from django.shortcuts import render, redirect
 from django.contrib import messages
 import logging
@@ -107,8 +108,9 @@ class SignupView(CreateView):
         sec_q_user.save()
 
         email_subject = "[TDT4237] [GR9] Activate your user account."
-        email_content = render_to_string('user/email_template.html', {'user': user,
-                                                                      'domain': settings.BASE_URL + str(settings.PORT),
+        current_site = Site.objects.get_current()
+
+        email_content = render_to_string('user/email_template.html', {'user': user, 'domain': current_site.domain,
                                                                       'token': user.profile.token})
 
         email = EmailMessage(email_subject, email_content, from_email='NO REPLY <noreply@gr9progsexy.ntnu.no>',
@@ -180,8 +182,7 @@ class ForgotPassword(FormView):
             user.save()
 
             email_subject = "[TDT4237] [GR9] Password reset in progress."
-            link = "http://{}/user/forgot/{}/{}".format(settings.BASE_URL + str(settings.PORT),
-                                                        profile.email, profile.token)
+            link = "http://{}/user/forgot/{}/{}".format(Site.objects.get_current().domain, profile.email, profile.token)
             email_content = "Link: {}\nPassword: {}".format(link, tmp_pw)
             email = EmailMessage(email_subject, email_content, from_email='NO REPLY <noreply@gr9progsexy.ntnu.no>',
                                  to=[profile.email], reply_to=['noreply@gr9progsexy.ntnu.no'])
