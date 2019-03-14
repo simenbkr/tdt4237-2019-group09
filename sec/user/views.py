@@ -87,30 +87,35 @@ class SignupView(CreateView):
     success_url = "user/email_sent.html"
 
     def form_valid(self, form):
-        user = form.save()
-        user.profile.company = form.cleaned_data.get("company")
-        user.profile.categories.add(*form.cleaned_data["categories"])
-        user.profile.email = form.cleaned_data.get("email")
-        user.is_active = False
-        user.profile.token = hexlify(urandom(32)).decode("utf-8")
-        user.save()
+        try:
+            user = form.save()
+            user.profile.company = form.cleaned_data.get("company")
+            user.profile.categories.add(*form.cleaned_data["categories"])
+            user.profile.email = form.cleaned_data.get("email")
+            user.is_active = False
+            user.profile.token = hexlify(urandom(32)).decode("utf-8")
+            user.save()
 
-        sec_question = form.cleaned_data.get('security_questions')
-        sec_q_user = SecurityQuestionUser.objects.create(user=user, security_question=sec_question,
-                                                         answer=form.cleaned_data.get('answer'))
-        sec_q_user.save()
+            sec_question = form.cleaned_data.get('security_questions')
+            sec_q_user = SecurityQuestionUser.objects.create(user=user, security_question=sec_question,
+                                                             answer=form.cleaned_data.get('answer'))
+            sec_q_user.save()
 
-        email_subject  = "[TDT4237] [GR9] Activate your user account."
-        current_site = Site.objects.get_current()
+            email_subject  = "[TDT4237] [GR9] Activate your user account."
+            current_site = Site.objects.get_current()
 
-        email_content = render_to_string('user/email_template.html', {'user': user, 'domain': current_site.domain,
-                                                                      'token': user.profile.token})
+            email_content = render_to_string('user/email_template.html', {'user': user, 'domain': current_site.domain,
+                                                                          'token': user.profile.token})
 
-        email = EmailMessage(email_subject, email_content, from_email='NO REPLY <noreply@gr9progsexy.ntnu.no>',
-                             to=[user.profile.email], reply_to=['noreply@gr9progsexy.ntnu.no'])
+            email = EmailMessage(email_subject, email_content, from_email='NO REPLY <noreply@gr9progsexy.ntnu.no>',
+                                 to=[user.profile.email], reply_to=['noreply@gr9progsexy.ntnu.no'])
 
-        email.send()
-        return render(self.request, self.success_url)
+            email.send()
+            return render(self.request, self.success_url)
+
+        except:
+            form.add_error(None, "The provided e-mail is already in use!")
+            return super().form_invalid()
 
 
 class VerifyUser(View):
