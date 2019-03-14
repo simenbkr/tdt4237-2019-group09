@@ -12,7 +12,7 @@ from django.conf import settings
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     tmp_login = models.BooleanField(default=False)
-    email = models.EmailField(max_length=100, blank=True, unique=True)
+    email = models.EmailField(max_length=100, blank=True)
     token = models.CharField(max_length=128, blank=True, null=True)
     company = models.TextField(max_length=50, blank=True)
     phone_number = models.TextField(max_length=50, blank=True)
