@@ -29,7 +29,10 @@ SECRET_KEY = 'uq9qv*an-4r!q7c*nts172f8uf(c(mdqo@0h6#851p9e!yz+fm'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'progsexy.flyktig.no']
+DOMAIN = 'progsexy.flyktig.no'
+PORT = 4009
+
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', DOMAIN]
 
 # Application definition
 
@@ -112,9 +115,6 @@ AUTH_PASSWORD_VALIDATORS = [
         }
     },
 ]
-
-DEFENDER_REVERSE_PROXY_HEADER = 'X-Real-IP'
-DEFENDER_LOCKOUT_TEMPLATE = '{}/sec/templates/failed_login.html'.format(BASE_DIR)
 
 LOCKOUT_COUNT = 3  # Attempts
 COOLDOWN_TIME = 1  # Hours

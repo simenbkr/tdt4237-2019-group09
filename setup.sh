@@ -4,6 +4,8 @@
 # /srv/www-data/group09/
 # If we are not, the configuration files for the nginx and group09 services must be edited.
 
+DOMAIN='progsexy.flyktig.no' # Update this shizzle.
+
 apt update && apt install nginx python3 python3-pip -y
 
 systemctl stop nginx
@@ -32,6 +34,8 @@ chown -R www-data:www-data .
 chmod 600 $PWD/sec/db.sqlite3
 
 python sec/manage.py clearsessions
+
+sqlite3 sec/db.sqlite3 "update django_site set name='$DOMAIN',domain='51.15.69.105:4009';"
 
 systemctl daemon-reload
 systemctl start group09
