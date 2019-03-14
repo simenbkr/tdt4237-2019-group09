@@ -22,11 +22,13 @@ python sec/manage.py migrate
 python sec/manage.py loaddata init.json
 
 python sec/manage.py collectstatic
+mv static sec
 
 ln -fs $PWD/group09.service /etc/systemd/system/group09.service
 ln -fs $PWD/nginx-configuration-file /etc/nginx/sites-enabled/default
 
 chown -R www-data:www-data .
+chmod 600 $PWD/sec/db.sqlite3
 
 systemctl daemon-reload
 systemctl start group09
