@@ -24,7 +24,7 @@ ln -fs $PWD/nginx-configuration-file /etc/nginx/sites-enabled/default
 
 chown -R www-data:www-data .
 
-
+systemctl daemon-reload
 systemctl start group09
 systemctl start nginx
 

@@ -12,6 +12,6 @@ server {
 	}
 
 	location /static/ {
-		root /srv/www-data/group09/;
+		root /srv/www-data/group09/sec/;
 	}
 }
