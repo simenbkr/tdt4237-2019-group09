@@ -307,8 +307,8 @@ def task_view(request, project_id, task_id):
 
     deliver_form = DeliveryForm()
     deliver_response_form = TaskDeliveryResponseForm()
-    team_form = TeamForm(task)
-    team_add_form = TeamAddForm()
+    team_form = TeamForm()
+    team_add_form = TeamAddForm(task)
 
     if user_permissions['read'] or user_permissions['write'] or user_permissions['modify'] or user_permissions[
         'owner'] or user_permissions['view_task']:
