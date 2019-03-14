@@ -52,17 +52,16 @@ class LoginView(FormView):
         if self.request.user.is_authenticated:
             return super().form_valid(form)
 
-        try:
-            from django.contrib.auth import authenticate
-            user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
+        from django.contrib.auth import authenticate
+        user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
+        
+        if user is not None and user.profile.tmp_login:
+            return HttpResponseRedirect(('/user/forgot/{}/{}'.format(user.profile.email, user.profile.token))
 
-            if user.profile.tmp_login:
-                return HttpResponseRedirect(reverse_lazy('/user/forgot/{}/{}'.format(user.profile.email, user.profile.token)))
-            elif user is not None:
-                login(self.request, user)
-                return super().form_valid(form)
-        except:
-            pass
+        if user is not None:
+            login(self.request, user)
+            return super().form_valid(form)
+
 
         ip = get_client_ip(self.request)
         user_login_failed.send(
