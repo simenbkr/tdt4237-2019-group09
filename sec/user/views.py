@@ -139,13 +139,13 @@ class ForgotPasswordEmail(FormView):
         try:
             profile = Profile.objects.get(email=form.cleaned_data.get("email"))
         except:
-            form.add_error("No user with that email.")
+            form.add_error(None, "No user with that email.")
             return super().form_invalid(form)
 
         if profile is not None:
             return redirect('{}'.format(profile.email))
 
-        form.add_error("No user with that email.")
+        form.add_error(None, "No user with that email.")
         return super().form_invalid(form)
 
     def form_invalid(self, form):
