@@ -269,7 +269,7 @@ def task_view(request, project_id, task_id):
 
     if request.method == 'POST' and 'team' in request.POST:
         if accepted_task_offer and accepted_task_offer.offerer == user.profile:
-            team_form = TeamForm(task, request.POST)
+            team_form = TeamForm(request.POST)
             if team_form.is_valid():
                 team = team_form.save(False)
                 team.task = task
@@ -278,7 +278,7 @@ def task_view(request, project_id, task_id):
     if request.method == 'POST' and 'team-add' in request.POST:
         if accepted_task_offer and accepted_task_offer.offerer == user.profile:
             instance = get_object_or_404(Team, id=request.POST.get('team-id'))
-            team_add_form = TeamAddForm(request.POST, instance=instance)
+            team_add_form = TeamAddForm(task, request.POST, instance=instance)
             if team_add_form.is_valid():
                 team = team_add_form.save(False)
                 team.members.add(*team_add_form.cleaned_data['members'])
