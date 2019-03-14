@@ -57,7 +57,7 @@ class LoginView(FormView):
             user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
 
             if user.profile.tmp_login:
-                return HttpResponseRedirect(reverse_lazy('forgot:{}:{}'.format(user.profile.email, user.profile.token)))
+                return HttpResponseRedirect(reverse_lazy('/user/forgot/{}/{}'.format(user.profile.email, user.profile.token)))
             elif user is not None:
                 login(self.request, user)
                 return super().form_valid(form)
