@@ -115,7 +115,7 @@ class SignupView(CreateView):
 
         except:
             form.add_error(None, "The provided e-mail is already in use!")
-            return super().form_invalid()
+            return super().form_invalid(form)
 
 
 class VerifyUser(View):
