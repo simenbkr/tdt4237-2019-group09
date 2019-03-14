@@ -11,7 +11,8 @@ class Command(BaseCommand):
         for object in objects:
             out += "{} | {} | {} | {} | {}".format(object.ip_addr, object.username, object.attempt_time,
                                                        object.user_agent, object.login_valid)
-            out += "="*50
+            out += "="
+            out += "="*100
 
         print(out)
         print("{} records shown.".format(len(list(objects))))
