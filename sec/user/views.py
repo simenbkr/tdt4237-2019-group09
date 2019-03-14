@@ -18,7 +18,6 @@ from .models import Profile, SecurityQuestionUser, allowed_to_login, get_client_
 from django.contrib.auth.signals import user_logged_in, user_logged_out, user_login_failed
 from django.conf import settings
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -79,43 +78,41 @@ class LoginView(FormView):
         return super().form_invalid(form)
 
 
-
-
 class SignupView(CreateView):
     form_class = SignUpForm
     template_name = "user/signup.html"
     success_url = "user/email_sent.html"
 
     def form_valid(self, form):
-        try:
-            user = form.save()
-            user.profile.company = form.cleaned_data.get("company")
-            user.profile.categories.add(*form.cleaned_data["categories"])
-            user.profile.email = form.cleaned_data.get("email")
-            user.is_active = False
-            user.profile.token = hexlify(urandom(32)).decode("utf-8")
-            user.save()
-
-            sec_question = form.cleaned_data.get('security_questions')
-            sec_q_user = SecurityQuestionUser.objects.create(user=user, security_question=sec_question,
-                                                             answer=form.cleaned_data.get('answer'))
-            sec_q_user.save()
-
-            email_subject  = "[TDT4237] [GR9] Activate your user account."
-            current_site = Site.objects.get_current()
-
-            email_content = render_to_string('user/email_template.html', {'user': user, 'domain': current_site.domain,
-                                                                          'token': user.profile.token})
-
-            email = EmailMessage(email_subject, email_content, from_email='NO REPLY <noreply@gr9progsexy.ntnu.no>',
-                                 to=[user.profile.email], reply_to=['noreply@gr9progsexy.ntnu.no'])
-
-            email.send()
-            return render(self.request, self.success_url)
-
-        except:
+        if len(list(Profile.objects.filter(email=form.cleaned_data.get("email")))) > 0:
             form.add_error(None, "The provided e-mail is already in use!")
             return super().form_invalid(form)
+
+        user = form.save()
+        user.profile.company = form.cleaned_data.get("company")
+        user.profile.categories.add(*form.cleaned_data["categories"])
+        user.profile.email = form.cleaned_data.get("email")
+        user.is_active = False
+        user.profile.token = hexlify(urandom(32)).decode("utf-8")
+
+        user.save()
+
+        sec_question = form.cleaned_data.get('security_questions')
+        sec_q_user = SecurityQuestionUser.objects.create(user=user, security_question=sec_question,
+                                                         answer=form.cleaned_data.get('answer'))
+        sec_q_user.save()
+
+        email_subject = "[TDT4237] [GR9] Activate your user account."
+        current_site = Site.objects.get_current()
+
+        email_content = render_to_string('user/email_template.html', {'user': user, 'domain': current_site.domain,
+                                                                      'token': user.profile.token})
+
+        email = EmailMessage(email_subject, email_content, from_email='NO REPLY <noreply@gr9progsexy.ntnu.no>',
+                             to=[user.profile.email], reply_to=['noreply@gr9progsexy.ntnu.no'])
+
+        email.send()
+        return render(self.request, self.success_url)
 
 
 class VerifyUser(View):
@@ -168,7 +165,8 @@ class ForgotPassword(FormView):
         user = profile.user
         sec_q = SecurityQuestionUser.objects.get(user=profile.user)
 
-        if sec_q.security_question == form.cleaned_data.get('security_questions') and sec_q.answer == form.cleaned_data['answer']:
+        if sec_q.security_question == form.cleaned_data.get('security_questions') and sec_q.answer == form.cleaned_data[
+            'answer']:
             tmp_pw = hexlify(urandom(32)).decode("utf-8")
 
             profile.tmp_login = True
@@ -182,7 +180,7 @@ class ForgotPassword(FormView):
             link = "http://{}/user/forgot/{}/{}".format(Site.objects.get_current().domain, profile.email, profile.token)
             email_content = "Link: {}\nPassword: {}".format(link, tmp_pw)
             email = EmailMessage(email_subject, email_content, from_email='NO REPLY <noreply@gr9progsexy.ntnu.no>',
-                             to=[profile.email], reply_to=['noreply@gr9progsexy.ntnu.no'])
+                                 to=[profile.email], reply_to=['noreply@gr9progsexy.ntnu.no'])
 
             email.send()
 
@@ -206,7 +204,6 @@ class ResetPassword(FormView):
         else:
             return render(request, "user/reset.html", {'form': ResetForm})
 
-
     def form_valid(self, form):
         email = self.kwargs['email']
         token = self.kwargs['token']
@@ -216,7 +213,6 @@ class ResetPassword(FormView):
 
         if token == profile.token and user.check_password(form.cleaned_data.get('temporary_pw')) and \
                 form.cleaned_data.get('new_password1') == form.cleaned_data.get('new_password2'):
-
             user.set_password(form.cleaned_data.get('new_password1'))
             user.save()
 
