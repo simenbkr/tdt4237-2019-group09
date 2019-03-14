@@ -14,7 +14,7 @@ from django.contrib.sites.models import Site
 from django.shortcuts import render, redirect
 from django.contrib import messages
 import logging
-from .models import Profile, SecurityQuestionUser, allowed_to_login
+from .models import Profile, SecurityQuestionUser, allowed_to_login, get_client_ip
 from django.contrib.auth.signals import user_logged_in, user_logged_out, user_login_failed
 from django.conf import settings
 
@@ -49,6 +49,10 @@ class LoginView(FormView):
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
+
+        if self.request.user.is_authenticated:
+            return super().form_valid(form)
+
         try:
             from django.contrib.auth import authenticate
             user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
@@ -58,7 +62,7 @@ class LoginView(FormView):
         except:
             pass
 
-        ip = self.request.META.get('REMOTE_ADDR')
+        ip = get_client_ip(self.request)
         user_login_failed.send(
             sender=User,
             request=self.request,
@@ -66,7 +70,7 @@ class LoginView(FormView):
                 'username': form.cleaned_data['username']
             }
         )
-        logger.warning('invalid log-in attempt for user: {} from {}'.format(form.cleaned_data['username'], ip))
+        logger.warning('Invalid log-in attempt for user: {} from {}'.format(form.cleaned_data['username'], ip))
         form.add_error(None, "Provide a valid username and/or password")
 
         return super().form_invalid(form)

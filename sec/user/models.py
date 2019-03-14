@@ -110,9 +110,10 @@ def handle_failed_login(sender, credentials, request, **kwargs):
 
 
 @receiver(user_logged_in)
-def handle_logged_in(sender, credentials, request, **kwargs):
+def handle_logged_in(sender, request, **kwargs):
     """
     Reset the attempts made by this client on this user and ip touple.
     """
     ip = get_client_ip(request)
-    AccessAttempt.objects.filter(ip_addr=ip).filter(username=credentials['username']).delete()
+    # AccessAttempt.objects.filter(ip_addr=ip).filter(username=credentials['username']).delete()
+    AccessAttempt.objects.filter(ip_addr=ip).delete()
