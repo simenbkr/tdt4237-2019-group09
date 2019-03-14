@@ -30,6 +30,8 @@ ln -fs $PWD/nginx-configuration-file /etc/nginx/sites-enabled/default
 chown -R www-data:www-data .
 chmod 600 $PWD/sec/db.sqlite3
 
+python sec/manage.py clearsessions
+
 systemctl daemon-reload
 systemctl start group09
 systemctl start nginx
