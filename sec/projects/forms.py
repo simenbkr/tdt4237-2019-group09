@@ -88,12 +88,11 @@ class TeamForm(forms.ModelForm):
 
 
 class TeamAddForm(forms.ModelForm):
-    #members = forms.ModelMultipleChoiceField(queryset=Profile.objects.all().filter(pk__in=[a.user.pk for a in task.project.participants.all()]), label='Members with read')
 
     def __init__(self, task, *args, **kwargs):
         super(TeamAddForm, self).__init__()
         user = User.objects.filter(pk__in=[a.user.pk for a in task.project.participants.all()])
-        self.fields['user'] = forms.ModelChoiceField(queryset=user)
+        self.fields['members'] = forms.ModelMultipleChoiceField(queryset=user)
 
     class Meta:
         model = Team
