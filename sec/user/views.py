@@ -136,12 +136,17 @@ class ForgotPasswordEmail(FormView):
     template_name = "user/enter_email.html"
 
     def form_valid(self, form):
-        profile = Profile.objects.get(email=form.cleaned_data.get("email"))
+        try:
+            profile = Profile.objects.get(email=form.cleaned_data.get("email"))
+        except:
+            form.add_error("No user with that email.")
+            return super().form_invalid(form)
+
         if profile is not None:
             return redirect('{}'.format(profile.email))
 
         form.add_error("No user with that email.")
-        super().form_invalid(form)
+        return super().form_invalid(form)
 
     def form_invalid(self, form):
         form.add_error("Invalid email!")
@@ -176,7 +181,7 @@ class ForgotPassword(FormView):
 
             email.send()
 
-            messages.success("Your temporary password, with a link to login has been sent to your email")
+            messages.success(self.request, "Your temporary password, with a link to login has been sent to your email")
             return HttpResponseRedirect(reverse_lazy('home'))
 
         messages.warning(self.request, "Something went wrong.. Please try again.")
