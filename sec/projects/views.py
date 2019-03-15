@@ -412,8 +412,9 @@ def view_file(request, file_id):
 
 
 @login_required
-def view_delivery_file(request, delivery):
+def view_delivery_file(request, delivery_id):
 
+    delivery = Delivery.objects.get(pk=delivery_id)
     task = delivery.task
     f = delivery.file
     user_permissions = get_user_task_permissions(request.user, task)
