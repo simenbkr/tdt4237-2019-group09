@@ -423,10 +423,10 @@ def view_delivery_file(request, delivery_id):
         messages.error(request, "You do not have permission to read this file.")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-    response = FileResponse(open(f.file.path, 'rb'))
-    t = mimetypes.guess_type(f.file.path)[0]
+    response = FileResponse(open(f.path, 'rb'))
+    t = mimetypes.guess_type(f.path)[0]
     g = t.split('/')[0]
-    response['Content-Disposition'] = f'inline; filename="{f.name()}"'
+    response['Content-Disposition'] = f'inline; filename="{f}"'
     if g in ['audio', 'video', 'image', '']:
         pass
     elif g == 'text' or t == 'application/javascript':
@@ -435,7 +435,7 @@ def view_delivery_file(request, delivery_id):
         pass
     else:
         t = 'application/octet-stream'
-        response['Content-Disposition'] = f'attachment; filename="{f.name()}"'
+        response['Content-Disposition'] = f'attachment; filename="{f}"'
 
     response['Content-Type'] = t
     return response
