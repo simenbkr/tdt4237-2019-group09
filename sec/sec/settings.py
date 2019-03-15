@@ -162,8 +162,8 @@ SERVER_EMAIL = 'gr9@stud.ntnu.no'
 DEFAULT_FROM_EMAIL = 'gr9@stud.ntnu.no'
 EMAIL_SUBJECT_PREFIX = '[Django] '
 EMAIL_HOST = 'smtp.stud.ntnu.no'
-#EMAIL_PORT = 25
-EMAIL_PORT = 6969
+EMAIL_PORT = 25
+#EMAIL_PORT = 6969
 
 SITE_ID = 1
 
