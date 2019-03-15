@@ -1,66 +1,26 @@
-# sec
-
-## Get started
-It's recommended to have a look at: https://www.djangoproject.com/start/
-
-Basic tutorial that walks trough what the different files does.
-https://docs.djangoproject.com/en/2.0/intro/tutorial01/
-
-Create a virtualenv https://docs.python-guide.org/dev/virtualenvs/
+# TDT4237-2019-group9
 
 
-## Local setup
+### Local setup
 
-### Setup with Docker
-Install Docker and Docker Compose if you haven't already done so.
+Clone this repo to the folder /srv/www-data/group09/.
 
-Clone the project to your machine.
+If you wish, you may place it anywhere, but be sure to edit `nginx-configuration-file` as 
+well as `group09.service` to reflect this change.
 
-Run `docker-compose up` inside the main folder.
+`git clone git@github.com:simenbkr/tdt4237-2019-group09.git /srv/www-data/group09`
 
-### Installation with examples for ubuntu. Windows and OSX is mostly the same
+Edit the setup.sh file to contain your correct `DOMAIN` and `PORT`, then run it (tested on Ubuntu18.04.02 LTS)
 
-Fork the project and clone it to your machine.
-
-#### Setup and activation of virtualenv (env that prevents python packages from being installed globaly on the machine)
-
-`pip install virtualenv`
-
-`virtualenv -p python3 env`
-
-`source env/bin/activate`
+`./setup.sh`
 
 
-#### Install python requirements
+### Possible issues with setup
 
-`pip install -r requirements.txt`
+Make sure that www-data has read/write access to `sec/db.sqlite3`, as well as read access to all files in the
+directory.
 
+Make sure that the domain is configured correctly. If unable to login, this may be due to not having the correct
+domain set, or because of stale sessions. Run `source venv/bin/activate && python sec/manage.py clearsessions` to
+fix this.
 
-#### Migrate database
-
-`python sec/manage.py migrate`
-
-
-#### Create superuser
-
-Create a local admin user by entering the following command:
-
-`python sec/manage.py createsuperuser`
-
-Only username and password is required
-
-
-#### Start the app
-
-`python sec/manage.py runserver`
-
-
-#### Add initial data
-
-Add initial data go to the url the app is running on localy after `runserver` and add `/admin` to the url.
-
-Add some categories and you should be all set.
-
-or by entering
-
-`python sec/manage.py loaddata seed.json`
