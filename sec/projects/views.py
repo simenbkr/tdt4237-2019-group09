@@ -278,7 +278,7 @@ def task_view(request, project_id, task_id):
     if request.method == 'POST' and 'team-add' in request.POST:
         if accepted_task_offer and accepted_task_offer.offerer == user.profile:
             instance = get_object_or_404(Team, id=request.POST.get('team-id'))
-            team_add_form = TeamAddForm(request.POST, instance=instance)
+            team_add_form = TeamAddForm(task, request.POST, instance=instance)
             if team_add_form.is_valid():
                 team = team_add_form.save(False)
                 team.members.add(*team_add_form.cleaned_data['members'])
@@ -308,7 +308,7 @@ def task_view(request, project_id, task_id):
     deliver_form = DeliveryForm()
     deliver_response_form = TaskDeliveryResponseForm()
     team_form = TeamForm()
-    team_add_form = TeamAddForm()
+    team_add_form = TeamAddForm(task)
 
     if user_permissions['read'] or user_permissions['write'] or user_permissions['modify'] or user_permissions[
         'owner'] or user_permissions['view_task']:
