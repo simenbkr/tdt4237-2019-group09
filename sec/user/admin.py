@@ -10,6 +10,7 @@ class ProfileInline(admin.StackedInline):
     can_delete = False
     verbose_name_plural = 'Profile'
     fk_name = 'user'
+    exclude = ('session',)
 
 
 class CustomUserAdmin(UserAdmin):
@@ -30,12 +31,7 @@ class CustomUserAdmin(UserAdmin):
         return super(CustomUserAdmin, self).get_inline_instances(request, obj)
 
 
-
-
-
-
-#admin.site.unregister(User)                    # TODO: COMMENT OUT THIS LINE REF OTG-CONFIG-005
-#admin.site.register(User, CustomUserAdmin)
+admin.site.unregister(User)
+admin.site.register(User, CustomUserAdmin)
 admin.site.register(SecurityQuestion)
-#admin.site.register(SecurityQuestionUser)
-#admin.site.register(Profile)                   # TODO: COMMENT OUT THIS LINE REF OTG-CONFIG-005
+
