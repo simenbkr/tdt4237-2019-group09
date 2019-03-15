@@ -8,8 +8,14 @@ from .models import Payment
 from django.http import Http404
 from projects.views import get_user_task_permissions
 
+
 def payment(request, project_id, task_id):
+
     sender = Project.objects.get(pk=project_id).user
+
+    if request.user is not sender:
+        raise Http404
+
     task = Task.objects.get(pk=task_id)
     receiver = get_accepted_task_offer(task).offerer
 
@@ -33,8 +39,7 @@ class ReceiptView(TemplateView):
         project = Project.objects.get(pk=project_id)
 
         perms = get_user_task_permissions(self.request.user, task)
-
-        if not perms['view_task'] and not perms['read']:
+        if not perms['read']:
             raise Http404
 
         task = Task.objects.get(pk=task_id)
