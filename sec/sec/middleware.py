@@ -10,7 +10,7 @@ from django.core.exceptions import SuspiciousOperation
 from django.utils.cache import patch_vary_headers
 from django.contrib.sites.models import Site
 from django.utils.http import http_date
-from user.models import allowed_to_login, AccessAttempt
+from user.models import allowed_to_login
 from django.shortcuts import render
 from django.urls import reverse
 
@@ -44,7 +44,7 @@ class SimpleSessionMiddleware(SessionMiddleware):
                 response.delete_cookie(
                     settings.SESSION_COOKIE_NAME,
                     path=settings.SESSION_COOKIE_PATH,
-                    domain=domain,
+                    domain=settings.SESSION_COOKIE_DOMAIN,
                 )
             if accessed:
                 patch_vary_headers(response, ("Cookie",))
@@ -67,7 +67,7 @@ class SimpleSessionMiddleware(SessionMiddleware):
                 response.set_cookie(
                     settings.SESSION_COOKIE_NAME,
                     request.session.session_key, max_age=max_age, expires=expires,
-                    domain=domain,
+                    domain=settings.SESSION_COOKIE_DOMAIN,
                     path=settings.SESSION_COOKIE_PATH,
                     secure=settings.SESSION_COOKIE_SECURE,
                     httponly=settings.SESSION_COOKIE_HTTPONLY,
