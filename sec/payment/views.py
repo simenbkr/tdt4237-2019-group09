@@ -29,14 +29,15 @@ class ReceiptView(TemplateView):
     def get_context_data(self, project_id, task_id, **kwargs):
         context_data = super().get_context_data(**kwargs)
 
-        team_members = Team.objects.get(task=task_id).members
-        if self.request.user not in list(team_members) and \
-                self.request.user is not Project.objects.get(pk=project_id).user:
+        team_members = Team.objects.get(task=task_id).members.all()
+        project = Project.objects.get(pk=project_id)
+
+        if self.request.user is not project.user and self.request.user not in list(team_members):
             raise Http404
 
         task = Task.objects.get(pk=task_id)
         context_data.update({
-            "project": Project.objects.get(pk=project_id),
+            "project": project,
             "task": task,
             "taskoffer": get_accepted_task_offer(task),
         })
