@@ -53,7 +53,7 @@
 
                                     <span class="mb-1 ml-5">
                                             {% for task in project.tasks.all %}
-                                                {{ task.title }} - {{ task|offers }}
+                                                {{ task.title }} - {{ task|offers }} <br>
                                             {% endfor %}
                                         </span>
                                 </div>
@@ -91,7 +91,7 @@
                                          alt="Generic placeholder image."/>
                                     <ul class="mb-1 ml-5 offerer-taskoffer-status">
                                         {% for task in project.tasks.all %}
-                                            {{ task.title }} - {{ task|task_status }}
+                                            {{ task.title }} - {{ task|task_status }} <br>
                                         {% endfor %}
                                     </ul>
                                 </div>
@@ -108,7 +108,7 @@
                     <div class="list-group" id="closed-projects">
                         {% define "You don't have any costumer projects in progress" as project_container_status %}
                         {% for project in customer_projects %}
-                            {% if project.status == project.INPROG %}
+                            {% if project.status == Project.INPROG %}
                                 {% define "" as project_container_status %}
                                 <a href="{% url 'project_view' project_id=project.id %}"
                                    class="list-group-item list-group-item-action flex-column align-items-start my-1">
@@ -168,7 +168,7 @@
                     <div class="list-group" id="closed-projects">
                         {% define "You don't have any customer projects in progress" as project_container_status %}
                         {% for project in given_offers_projects %}
-                            {% if project.status == project.OPEN %}
+                            {% if project.status == Project.OPEN %}
                                 {% define "" as project_container_status %}
                                 <a href="{% url 'project_view' project_id=project.id %}"
                                    class="list-group-item list-group-item-action flex-column align-items-start my-1">
@@ -248,7 +248,7 @@
                     <div class="list-group" id="finished-costumer-projects">
                         {% define "You don't have any finished customer projects" as project_container_status %}
                         {% for project in customer_projects %}
-                            {% if project.status == project.FINISHED %}
+                            {% if project.status == Project.FINISHED %}
                                 {% define "" as project_container_status %}
                                 <a href="{% url 'project_view' project_id=project.id %}"
                                    class="list-group-item list-group-item-action flex-column align-items-start my-1">
