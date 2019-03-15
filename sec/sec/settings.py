@@ -32,7 +32,7 @@ DEBUG = False
 DOMAIN = 'progsexy.flyktig.no'
 PORT = 4009
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', DOMAIN]
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 # Application definition
 
