@@ -279,10 +279,7 @@
                 {{ delivery.comment }}
             </div>
             <div>
-                <a
-                        target="_blenk" href="/{{ delivery.file }}">
-                    {{ delivery.file }}
-                </a>
+            <a target="_blak" href="{% url 'view_file' file_id=delivery.file.id %}">{{ delivery.file }}</a>
             </div>
             <div>
                 <h3>Feedback: </h3>
