@@ -6,7 +6,7 @@ from projects.templatetags.project_extras import get_accepted_task_offer
 from .forms import PaymentForm
 from .models import Payment
 from django.http import Http404
-
+from projects.views import get_user_task_permissions
 
 def payment(request, project_id, task_id):
     sender = Project.objects.get(pk=project_id).user
@@ -31,13 +31,10 @@ class ReceiptView(TemplateView):
 
         task = Task.objects.get(pk=task_id)
         project = Project.objects.get(pk=project_id)
-        teams = Team.objects.all().filter(task=task)
-        members = []
 
-        for team in teams:
-            members += [m for m in list(team.members.all())]
+        perms = get_user_task_permissions(self.request.user, task)
 
-        if self.request.user.profile is not project.user and self.request.user.profile not in members:
+        if not perms['view_task'] and not perms['read']:
             raise Http404
 
         task = Task.objects.get(pk=task_id)
