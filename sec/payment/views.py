@@ -32,7 +32,7 @@ class ReceiptView(TemplateView):
         team_members = Team.objects.get(task=task_id).members.all()
         project = Project.objects.get(pk=project_id)
 
-        if self.request.user is not project.user and self.request.user not in list(team_members):
+        if self.request.user.profile is not project.user and self.request.user.profile not in list(team_members):
             raise Http404
 
         task = Task.objects.get(pk=task_id)
