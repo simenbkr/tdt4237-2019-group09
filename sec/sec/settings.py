@@ -136,6 +136,7 @@ SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
 PASSWORD_RESET_TIMEOUT_DAYS = 1
 
 SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = 'DENY'
 
 # Login redirect
 LOGIN_URL = 'login'
