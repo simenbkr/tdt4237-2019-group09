@@ -76,6 +76,7 @@ def project_view(request, project_id):
     project = Project.objects.get(pk=project_id)
     tasks = project.tasks.all()
     total_budget = sum(task.budget for task in tasks)
+    tasks = [t for t in tasks if get_user_task_permissions(request.user, t)['read']]
 
     if request.user == project.user.user:
 
