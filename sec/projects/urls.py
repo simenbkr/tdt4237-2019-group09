@@ -11,4 +11,5 @@ urlpatterns = [
     path('<project_id>/tasks/<task_id>/permissions/', views.task_permissions, name='task_permissions'),
     path('delete_file/<file_id>', views.delete_file, name='delete_file'),
     path('view_file/<file_id>', views.view_file, name='view_file'),
+    path('view_delivery_file/<delivery_id>', views.view_delivery_file, name='view_delivery_file'),
 ]

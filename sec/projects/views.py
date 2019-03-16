@@ -413,6 +413,36 @@ def view_file(request, file_id):
 
 
 @login_required
+def view_delivery_file(request, delivery_id):
+
+    delivery = Delivery.objects.get(pk=delivery_id)
+    task = delivery.task
+    f = delivery.file
+    user_permissions = get_user_task_permissions(request.user, task)
+
+    if not user_permissions['read']:
+        messages.error(request, "You do not have permission to read this file.")
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+    response = FileResponse(open(f.path, 'rb'))
+    t = mimetypes.guess_type(f.path)[0]
+    g = t.split('/')[0]
+    response['Content-Disposition'] = f'inline; filename="{f}"'
+    if g in ['audio', 'video', 'image', '']:
+        pass
+    elif g == 'text' or t == 'application/javascript':
+        t = 'text/plain'
+    elif t == 'application/pdf':
+        pass
+    else:
+        t = 'application/octet-stream'
+        response['Content-Disposition'] = f'attachment; filename="{f}"'
+
+    response['Content-Type'] = t
+    return response
+
+
+@login_required
 def delete_file(request, file_id):
     f = TaskFile.objects.get(pk=file_id)
     task = f.get_task()

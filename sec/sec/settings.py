@@ -14,7 +14,6 @@ import logging
 import os
 import sys
 
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -22,9 +21,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-#SECRET_KEY = '$n%^#g%qx#82w6t^dvjqwv)q*1cy+fwh1ohku7-rbjqcei2^jr'
+# SECRET_KEY = '$n%^#g%qx#82w6t^dvjqwv)q*1cy+fwh1ohku7-rbjqcei2^jr'
 SECRET_KEY = 'uq9qv*an-4r!q7c*nts172f8uf(c(mdqo@0h6#851p9e!yz+fm'
-
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -32,7 +30,7 @@ DEBUG = False
 DOMAIN = 'progsexy.flyktig.no'
 PORT = 4009
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', DOMAIN]
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 # Application definition
 
@@ -114,6 +112,12 @@ AUTH_PASSWORD_VALIDATORS = [
             'min_length': 15,
         }
     },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
 ]
 
 LOCKOUT_COUNT = 3  # Attempts
@@ -122,15 +126,17 @@ COOLDOWN_TIME = 1  # Hours
 SESSION_COOKIE_NAME = 'session'
 SESSION_COOKIE_PATH = '/'
 
-SESSION_COOKIE_AGE = 3600
-SESSION_COOKIE_SECURE = False #Set to True when TLS/HTTPS is deployed.
+SESSION_COOKIE_DOMAIN = None
+SESSION_COOKIE_AGE = 86400
+SESSION_COOKIE_SECURE = False  # Set to True when TLS/HTTPS is deployed.
 SESSION_COOKIE_HTTPONLY = True
-SESSION_SAVE_EVERY_REQUEST = False
+SESSION_SAVE_EVERY_REQUEST = True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
 PASSWORD_RESET_TIMEOUT_DAYS = 1
 
 SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = 'DENY'
 
 # Login redirect
 LOGIN_URL = 'login'
@@ -162,11 +168,10 @@ SERVER_EMAIL = 'gr9@stud.ntnu.no'
 DEFAULT_FROM_EMAIL = 'gr9@stud.ntnu.no'
 EMAIL_SUBJECT_PREFIX = '[Django] '
 EMAIL_HOST = 'smtp.stud.ntnu.no'
-#EMAIL_PORT = 25
-EMAIL_PORT = 6969
+EMAIL_PORT = 25
+# EMAIL_PORT = 6969
 
 SITE_ID = 1
-
 
 try:
     from .local_settings import *
