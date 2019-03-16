@@ -22,6 +22,7 @@ class HomeView(TemplateView):
             'finished_user_projects': user_projects.filter(status=Project.FINISHED),
             'customer_projects': customer_projects,
             'given_offers_projects': given_offers_projects,
+            'Project': Project,
         })
         return context_data
 
