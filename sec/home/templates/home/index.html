@@ -246,24 +246,20 @@
                     <!-- Finished costumer projects -->
                     <h3 class="mb-3 mt-5">Finished Costumer Projects</h3>
                     <div class="list-group" id="finished-costumer-projects">
-                        {% define "You don't have any finished customer projects" as project_container_status %}
-                        {% for project in customer_projects %}
-                            {% if project.status == Project.FINISHED %}
-                                {% define "" as project_container_status %}
-                                <a href="{% url 'project_view' project_id=project.id %}"
-                                   class="list-group-item list-group-item-action flex-column align-items-start my-1">
-                                    <div class="d-flex w-100 justify-content-between align-items-center">
-                                        <h5 class="mb-1">{% icon 'archive' %} {{ project.title }}</h5>
-                                    </div>
-                                    <div class="d-flex">
-                                        <img class="mt-1 project-image" src="{% static 'projects/img/idea.jpg' %}"
-                                             alt="Generic placeholder image."/>
-                                        <p class="mb-1 ml-5">Project is completed</p>
-                                    </div>
-                                </a>
-                            {% else %}
-                                {% if forloop.last %} <p class="mb-5">{{ project_container_status }}</p> {% endif %}
-                            {% endif %}
+                        {% for project in [ p for p in customer_projects if p.status == Project.FINISHED %}
+                            <a href="{% url 'project_view' project_id=project.id %}"
+                                class="list-group-item list-group-item-action flex-column align-items-start my-1">
+                                <div class="d-flex w-100 justify-content-between align-items-center">
+                                    <h5 class="mb-1">{% icon 'archive' %} {{ project.title }}</h5>
+                                </div>
+                                <div class="d-flex">
+                                    <img class="mt-1 project-image" src="{% static 'projects/img/idea.jpg' %}"
+                                            alt="Generic placeholder image."/>
+                                    <p class="mb-1 ml-5">Project is completed</p>
+                                </div>
+                            </a>
+                        {% empty %}
+                            <p class="mb-5">You don't have any finished customer projects</p>
                         {% endfor %}
                     </div>
                 </div>
