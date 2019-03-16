@@ -106,117 +106,109 @@
                 <div class="tab-pane fade" id="costumer" role="tabpanel" aria-labelledby="costumer-project">
                     <h3 class="mb-3 mt-5">Costumer Projects</h3>
                     <div class="list-group" id="closed-projects">
-                        {% define "You don't have any costumer projects in progress" as project_container_status %}
-                        {% for project in customer_projects %}
-                            {% if project.status == Project.INPROG %}
-                                {% define "" as project_container_status %}
-                                <a href="{% url 'project_view' project_id=project.id %}"
-                                   class="list-group-item list-group-item-action flex-column align-items-start my-1">
-                                    <div class="d-flex w-100 justify-content-between align-items-center">
-                                        <h5 class="mb-1">{% icon 'comments' %} {{ project.title }}</h5>
+                        {% for project in in_progress_customer_projects %}
+                            <a href="{% url 'project_view' project_id=project.id %}"
+                                class="list-group-item list-group-item-action flex-column align-items-start my-1">
+                                <div class="d-flex w-100 justify-content-between align-items-center">
+                                    <h5 class="mb-1">{% icon 'comments' %} {{ project.title }}</h5>
 
-                                        {% define project|get_user_task_statuses:user as user_task_statuses %}
+                                    {% define project|get_user_task_statuses:user as user_task_statuses %}
 
-                                        <div>
-                                            {% if user_task_statuses.pending_acceptance %}
-                                                <span class="badge badge-secondary badge-pill">{{ user_task_statuses.pending_acceptance }} </span>
-                                            {% endif %}
-                                            {% if user_task_statuses.pending_payment %}
-                                                <span class="badge badge-warning badge-pill">{{ user_task_statuses.pending_payment }}</span>
-                                            {% endif %}
-                                            {% if user_task_statuses.payment_sent %}
-                                                <span class="badge badge-success badge-pill">{{ user_task_statuses.payment_sent }}</span>
-                                            {% endif %}
-                                        </div>
-
+                                    <div>
+                                        {% if user_task_statuses.pending_acceptance %}
+                                            <span class="badge badge-secondary badge-pill">{{ user_task_statuses.pending_acceptance }} </span>
+                                        {% endif %}
+                                        {% if user_task_statuses.pending_payment %}
+                                            <span class="badge badge-warning badge-pill">{{ user_task_statuses.pending_payment }}</span>
+                                        {% endif %}
+                                        {% if user_task_statuses.payment_sent %}
+                                            <span class="badge badge-success badge-pill">{{ user_task_statuses.payment_sent }}</span>
+                                        {% endif %}
                                     </div>
-                                    <div class="d-flex text-left">
-                                        <img class="mt-1 project-image" src="{% static 'projects/img/idea.jpg' %}"
-                                             alt="Generic placeholder image."/>
-                                        <ul class="mb-1 ml-5 offerer-taskoffer-status">
-                                            {% if user_task_statuses.awaiting_delivery %}
-                                                <li>Waiting for your delivery</li>
-                                            {% endif %}
 
-                                            {% if user_task_statuses.pending_acceptance == 1 %}
-                                                <li>You have one delivery waiting for acceptance</li>
-                                            {% elif user_task_statuses.pending_acceptance %}
-                                                <li>You have deliveries waiting for acceptance</li>
-                                            {% endif %}
+                                </div>
+                                <div class="d-flex text-left">
+                                    <img class="mt-1 project-image" src="{% static 'projects/img/idea.jpg' %}"
+                                            alt="Generic placeholder image."/>
+                                    <ul class="mb-1 ml-5 offerer-taskoffer-status">
+                                        {% if user_task_statuses.awaiting_delivery %}
+                                            <li>Waiting for your delivery</li>
+                                        {% endif %}
 
-                                            {% if user_task_statuses.pending_payment == 1 %}
-                                                <li>You have one delivery waiting for payment</li>
-                                            {% elif user_task_statuses.pending_payment %}
-                                                <li>You have deliveries waiting for payment</li>
-                                            {% endif %}
+                                        {% if user_task_statuses.pending_acceptance == 1 %}
+                                            <li>You have one delivery waiting for acceptance</li>
+                                        {% elif user_task_statuses.pending_acceptance %}
+                                            <li>You have deliveries waiting for acceptance</li>
+                                        {% endif %}
 
-                                            {% if user_task_statuses.payment_sent == 1 %}
-                                                <li>You have received one payment</li>
-                                            {% elif user_task_statuses.payment_sent %}
-                                                <li>You have received payments for deliveries</li>
-                                            {% endif %}
-                                        </ul>
-                                    </div>
-                                </a>
-                            {% else %}
-                                {% if forloop.last %} <p class="mb-5">{{ project_container_status }}</p> {% endif %}
-                            {% endif %}
+                                        {% if user_task_statuses.pending_payment == 1 %}
+                                            <li>You have one delivery waiting for payment</li>
+                                        {% elif user_task_statuses.pending_payment %}
+                                            <li>You have deliveries waiting for payment</li>
+                                        {% endif %}
+
+                                        {% if user_task_statuses.payment_sent == 1 %}
+                                            <li>You have received one payment</li>
+                                        {% elif user_task_statuses.payment_sent %}
+                                            <li>You have received payments for deliveries</li>
+                                        {% endif %}
+                                    </ul>
+                                </div>
+                            </a>
+                        {% empty %}
+                            <p class="mb-5">You don't have any costumer projects in progress</p>
                         {% endfor %}
                     </div>
 
                     <h3 class="mb-3 mt-5">Your Offers</h3>
                     <div class="list-group" id="closed-projects">
-                        {% define "You don't have any customer projects in progress" as project_container_status %}
                         {% for project in given_offers_projects %}
-                            {% if project.status == Project.OPEN %}
-                                {% define "" as project_container_status %}
-                                <a href="{% url 'project_view' project_id=project.id %}"
-                                   class="list-group-item list-group-item-action flex-column align-items-start my-1">
-                                    <div class="d-flex w-100 justify-content-between align-items-center">
-                                        <h5 class="mb-1">{% icon 'comments' %} {{ project.title }}</h5>
+                            <a href="{% url 'project_view' project_id=project.id %}"
+                                class="list-group-item list-group-item-action flex-column align-items-start my-1">
+                                <div class="d-flex w-100 justify-content-between align-items-center">
+                                    <h5 class="mb-1">{% icon 'comments' %} {{ project.title }}</h5>
 
-                                        {% define project|check_nr_user_offers:user as offers %}
-                                        <div>
-                                            {% if offers.declined %}
-                                                <span class="badge badge-danger badge-pill">{{ offers.declined }}</span>
-                                            {% endif %}
-                                            {% if offers.pending %}
-                                                <span class="badge badge-warning badge-pill">{{ offers.pending }}</span>
-                                            {% endif %}
-                                            {% if offers.accepted %}
-                                                <span class="badge badge-success badge-pill">{{ offers.accepted }}</span>
-                                            {% endif %}
-                                        </div>
-
-                                    </div>
-                                    <div class="d-flex text-left">
-                                        <img class="mt-1 project-image" src="{% static 'projects/img/idea.jpg' %}"
-                                             alt="Generic placeholder image."/>
-                                        <ul class="mb-1 ml-5 offerer-taskoffer-status">
-                                            {% if offers.declined == 1 %}
-                                                <li>You have one declined offer</li>
-                                            {% elif offers.declined %}
-                                                <li>You have declined offers</li>
-                                            {% endif %}
-
-                                            {% if offers.pending == 1 %}
-                                                <li>You have one pending offer</li>
-                                            {% elif offers.pending %}
-                                                <li>You have pending offers</li>
-                                            {% endif %}
-
-                                            {% if offers.accepted == 1 %}
-                                                <li>You have one accepted offer</li>
-                                            {% elif offers.accepted %}
-                                                <li>You have accepted offers</li>
-                                            {% endif %}
-                                        </ul>
+                                    {% define project|check_nr_user_offers:user as offers %}
+                                    <div>
+                                        {% if offers.declined %}
+                                            <span class="badge badge-danger badge-pill">{{ offers.declined }}</span>
+                                        {% endif %}
+                                        {% if offers.pending %}
+                                            <span class="badge badge-warning badge-pill">{{ offers.pending }}</span>
+                                        {% endif %}
+                                        {% if offers.accepted %}
+                                            <span class="badge badge-success badge-pill">{{ offers.accepted }}</span>
+                                        {% endif %}
                                     </div>
 
-                                </a>
-                            {% else %}
-                                {% if forloop.last %} <p class="mb-5">{{ project_container_status }}</p> {% endif %}
-                            {% endif %}
+                                </div>
+                                <div class="d-flex text-left">
+                                    <img class="mt-1 project-image" src="{% static 'projects/img/idea.jpg' %}"
+                                            alt="Generic placeholder image."/>
+                                    <ul class="mb-1 ml-5 offerer-taskoffer-status">
+                                        {% if offers.declined == 1 %}
+                                            <li>You have one declined offer</li>
+                                        {% elif offers.declined %}
+                                            <li>You have declined offers</li>
+                                        {% endif %}
+
+                                        {% if offers.pending == 1 %}
+                                            <li>You have one pending offer</li>
+                                        {% elif offers.pending %}
+                                            <li>You have pending offers</li>
+                                        {% endif %}
+
+                                        {% if offers.accepted == 1 %}
+                                            <li>You have one accepted offer</li>
+                                        {% elif offers.accepted %}
+                                            <li>You have accepted offers</li>
+                                        {% endif %}
+                                    </ul>
+                                </div>
+
+                            </a>
+                        {% empty %}
+                            <p class="mb-5">You don't have any customer projects in progress</p>
                         {% endfor %}
                     </div>
 
@@ -246,7 +238,7 @@
                     <!-- Finished costumer projects -->
                     <h3 class="mb-3 mt-5">Finished Costumer Projects</h3>
                     <div class="list-group" id="finished-costumer-projects">
-                        {% for project in customer_projects.filter(status=Project.FINISHED) %}
+                        {% for project in finished_customer_projects %}
                             <a href="{% url 'project_view' project_id=project.id %}"
                                 class="list-group-item list-group-item-action flex-column align-items-start my-1">
                                 <div class="d-flex w-100 justify-content-between align-items-center">

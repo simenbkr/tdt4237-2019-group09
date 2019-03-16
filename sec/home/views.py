@@ -20,9 +20,10 @@ class HomeView(TemplateView):
             'open_user_projects': user_projects.filter(status=Project.OPEN),
             'in_progress_user_projects': user_projects.filter(status=Project.INPROG),
             'finished_user_projects': user_projects.filter(status=Project.FINISHED),
-            'customer_projects': customer_projects,
-            'given_offers_projects': given_offers_projects,
-            'Project': Project,
+            'open_customer_projects': [p for p in customer_projects if p.status == Project.OPEN],
+            'in_progress_customer_projects': [p for p in customer_projects if p.status == Project.INPROG],
+            'finished_customer_projects': [p for p in customer_projects if p.status == Project.FINISHED],
+            'given_offers_projects': [p for p in given_offers_projects if p.status == Project.OPEN],
         })
         return context_data
 
